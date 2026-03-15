@@ -1,5 +1,5 @@
 <resources>
     <string name="statistics_button_text">Статистика</string>
     <string name="authors_button_text">Авторы</string>
-    <string name="next_level_teaser">До уровня %2$d осталось %1d кликов</string>
+    <string name="next_level_teaser_text">До уровня %2$d осталось %1d кликов</string>
 </resources>
