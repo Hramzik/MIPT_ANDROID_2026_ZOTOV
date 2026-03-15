@@ -9,8 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var clickCounterView: TextView
-    private lateinit var mainClickerButton: ImageButton
     private lateinit var clickCounter: ClickCounter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,17 +21,22 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        clickCounterView = findViewById(R.id.click_counter_view)
-        mainClickerButton = findViewById(R.id.main_clicker_button)
         clickCounter = ClickCounter.create(this)
 
+        val mainClickerButton: ImageButton = findViewById(R.id.main_clicker_button)
         mainClickerButton.setOnClickListener {
             clickCounter.increment()
         }
+
+        val clickCounterView: TextView = findViewById(R.id.click_counter_view)
+        val nextLevelTeaserView: TextView = findViewById(R.id.next_level_teaser_view)
         clickCounter.setClickListener {
             clickCounterView.text = clickCounter.clickCount.toString()
+            val level = LevelManager.getLevel(clickCounter.clickCount)
+            val remaining = LevelManager.getRemainingClicksToNextLevel(clickCounter.clickCount)
+            nextLevelTeaserView.text = getString(R.string.next_level_teaser, remaining, level + 1)
         }
-        clickCounter.loadClickCount();
+        clickCounter.loadClickCount()
         clickCounter.restoreState(savedInstanceState)
     }
 
