@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Clicker</string>
+
     <string name="statistics_button_text">Statistics</string>
     <string name="authors_button_text">Authors</string>
     <string name="authors_button_toast_text">Banana clicker by VladZ</string>
+    <string name="author_telegram_button_url">https://t.me/The_Eclipse69</string>
+
     <string name="next_level_teaser_text">%1$d clicks left to level %2$d</string>
 </resources>

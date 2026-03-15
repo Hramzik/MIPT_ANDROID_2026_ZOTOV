@@ -32,6 +32,13 @@ class MainActivity : AppCompatActivity() {
             finishAffinity()
         }
 
+        val telegramButton: ImageButton = findViewById(R.id.author_telegram_button)
+        telegramButton.setOnClickListener {
+            val telegramUrl = getString(R.string.author_telegram_button_url)
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(telegramUrl))
+            startActivity(intent)
+        }
+
         clickCounter = ClickCounter.create(this)
 
         val mainClickerButton: ImageButton = findViewById(R.id.main_clicker_button)
