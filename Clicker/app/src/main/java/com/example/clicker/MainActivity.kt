@@ -11,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var clickCounter: ClickCounter
+    private lateinit var vibrationManager: VibrationManager
+    private lateinit var muteButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +41,25 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        vibrationManager = VibrationManager(this)
+        val muteButton: ImageButton = findViewById(R.id.mute_button)
+        vibrationManager.setOnVibrationStateChangeListener {
+            if (vibrationManager.isVibrationEnabled) {
+                muteButton.setImageResource(R.drawable.baseline_volume_up_24)
+            } else {
+                muteButton.setImageResource(R.drawable.baseline_volume_off_24)
+            }
+        }
+
+        muteButton.setOnClickListener {
+            vibrationManager.toggleVibration()
+        }
+
         clickCounter = ClickCounter.create(this)
 
         val mainClickerButton: ImageButton = findViewById(R.id.main_clicker_button)
         mainClickerButton.setOnClickListener {
+            vibrationManager.tryVibrate()
             clickCounter.increment()
         }
 
