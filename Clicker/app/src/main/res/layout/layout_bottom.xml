@@ -6,7 +6,6 @@
     android:padding="16dp">
 
     <include
-        android:id="@+id/statistics_button"
         layout="@layout/statistics_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +13,6 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <include
-        android:id="@+id/authors_button"
         layout="@layout/authors_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

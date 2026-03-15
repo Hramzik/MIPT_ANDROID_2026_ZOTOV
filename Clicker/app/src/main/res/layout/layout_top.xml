@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/left_button_container"
-        layout="@layout/top_layout_left_button_container"
+        layout="@layout/layout_top_left_icon_button_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +19,7 @@
         android:id="@+id/app_name_view"
         layout="@layout/app_name_view"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/button_size"
+        android:layout_height="@dimen/icon_button_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,8 +27,8 @@
     <include
         android:id="@+id/mute_button"
         layout="@layout/mute_button"
-        android:layout_width="@dimen/button_size"
-        android:layout_height="@dimen/button_size"
+        android:layout_width="@dimen/icon_button_size"
+        android:layout_height="@dimen/icon_button_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
