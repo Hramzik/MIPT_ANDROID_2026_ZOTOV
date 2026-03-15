@@ -1,0 +1,4 @@
+<resources>
+    <string name="statistics_button_text">Статистика</string>
+    <string name="authors_button_text">Авторы</string>
+</resources>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Clicker</string>
+    <string name="statistics_button_text">Statistics</string>
+    <string name="authors_button_text">Authors</string>
 </resources>
