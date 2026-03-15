@@ -27,6 +27,11 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.authors_button_toast_text, Toast.LENGTH_SHORT).show()
         }
 
+        val exitButton: ImageButton = findViewById(R.id.exit_button)
+        exitButton.setOnClickListener {
+            finishAffinity()
+        }
+
         clickCounter = ClickCounter.create(this)
 
         val mainClickerButton: ImageButton = findViewById(R.id.main_clicker_button)
