@@ -1,35 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:stretchColumns="1">
+    android:stretchColumns="1"
+    android:background="@color/statistics_table_background">
 
     <TableRow>
         <TextView
-            android:text="Имя"
-            android:padding="8dp"
-            android:layout_column="0"/>
+            style="@style/BlackTextBase.Minor"
+            android:padding="15dp"
+
+            android:text="@string/month_statistics_text" />
         <TextView
-            android:text="Возраст"
-            android:padding="8dp"
-            android:layout_column="1"/>
+            style="@style/BlackTextBase.Minor"
+            android:padding="15dp"
+
+            android:gravity="right"
+            android:text="100" />
     </TableRow>
 
     <TableRow>
         <TextView
-            android:text="Анна"
-            android:padding="8dp"/>
+            style="@style/BlackTextBase.Minor"
+            android:padding="15dp"
+
+            android:text="@string/week_statistics_text" />
         <TextView
-            android:text="25"
-            android:padding="8dp"/>
+            style="@style/BlackTextBase.Minor"
+            android:padding="15dp"
+
+            android:gravity="right"
+            android:text="10" />
     </TableRow>
 
     <TableRow>
         <TextView
-            android:text="Иван"
-            android:padding="8dp"/>
+            style="@style/BlackTextBase.Minor"
+            android:padding="15dp"
+
+            android:text="@string/day_statistics_text" />
         <TextView
-            android:text="30"
-            android:padding="8dp"/>
+            style="@style/BlackTextBase.Minor"
+            android:padding="15dp"
+
+            android:gravity="right"
+            android:text="1" />
     </TableRow>
 
 </TableLayout>
