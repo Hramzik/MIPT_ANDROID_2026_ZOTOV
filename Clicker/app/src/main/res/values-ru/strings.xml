@@ -7,4 +7,5 @@
     <string name="month_statistics_text">Нажатий за месяц</string>
     <string name="week_statistics_text">Нажатий за неделю</string>
     <string name="day_statistics_text">Нажатий за день</string>
+    <string name="minute_statistics_text">Нажатий за минуту</string>
 </resources>

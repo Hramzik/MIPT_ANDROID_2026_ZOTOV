@@ -16,9 +16,11 @@ class StatisticsActivity : AppCompatActivity() {
         val monthValue: TextView = findViewById(R.id.month_value)
         val weekValue: TextView = findViewById(R.id.week_value)
         val dayValue: TextView = findViewById(R.id.day_value)
+        val minuteValue: TextView = findViewById(R.id.minute_value)
 
         monthValue.text = clickCounter.getMonthClicks().toString()
         weekValue.text = clickCounter.getWeekClicks().toString()
         dayValue.text = clickCounter.getTodayClicks().toString()
+        minuteValue.text = clickCounter.getLastMinuteClicks().toString()
     }
 }

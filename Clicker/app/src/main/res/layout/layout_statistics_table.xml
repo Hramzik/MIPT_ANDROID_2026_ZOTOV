@@ -45,4 +45,17 @@
             android:text="0" />
     </TableRow>
 
+    <TableRow>
+        <TextView
+            android:id="@+id/minute_label"
+            style="@style/BlackTextBase.Minor"
+            android:padding="8dp"
+            android:text="@string/minute_statistics_text" />
+        <TextView
+            android:id="@+id/minute_value"
+            style="@style/BlackTextBase.Minor"
+            android:padding="8dp"
+            android:text="0" />
+    </TableRow>
+
 </TableLayout>

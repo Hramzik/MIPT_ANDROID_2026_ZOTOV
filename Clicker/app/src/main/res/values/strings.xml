@@ -12,4 +12,5 @@
     <string name="month_statistics_text">Clicks per month</string>
     <string name="week_statistics_text">Clicks per week</string>
     <string name="day_statistics_text">Clicks per day</string>
+    <string name="minute_statistics_text">Clicks per minute</string>
 </resources>

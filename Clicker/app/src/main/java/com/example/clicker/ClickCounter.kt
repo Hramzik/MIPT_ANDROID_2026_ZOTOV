@@ -2,6 +2,7 @@ package com.example.clicker
 
 import android.content.Context
 import android.os.Bundle
+import java.util.concurrent.TimeUnit
 
 class ClickCounter private constructor(
     private val context: Context,
@@ -78,6 +79,12 @@ class ClickCounter private constructor(
         val now = System.currentTimeMillis()
         val startOfMonth = getStartOfMonth(now)
         return clickHistory.count { it.timestamp >= startOfMonth }
+    }
+
+    fun getLastMinuteClicks(): Int {
+        val now = System.currentTimeMillis()
+        val oneMinuteAgo = now - TimeUnit.MINUTES.toMillis(1)
+        return clickHistory.count { it.timestamp >= oneMinuteAgo }
     }
 
     private fun getStartOfDay(timestamp: Long): Long {
