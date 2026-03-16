@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/author_telegram_button" />
-    <include layout="@layout/exit_button" />
+    <include layout="@layout/button_author_telegram" />
+    <include layout="@layout/button_exit" />
 
 </LinearLayout>

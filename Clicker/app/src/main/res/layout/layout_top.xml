@@ -17,7 +17,7 @@
 
     <include
         android:id="@+id/app_name_view"
-        layout="@layout/app_name_view"
+        layout="@layout/view_app_name"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/icon_button_size"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
 
     <include
         android:id="@+id/mute_button"
-        layout="@layout/mute_button"
+        layout="@layout/button_mute"
         android:layout_width="@dimen/icon_button_size"
         android:layout_height="@dimen/icon_button_size"
         app:layout_constraintEnd_toEndOf="parent"

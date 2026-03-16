@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/main_clicker_button"
+        layout="@layout/button_main_clicker"
         android:id="@+id/main_clicker_button"
         android:layout_width="@dimen/main_clicker_button_size"
         android:layout_height="@dimen/main_clicker_button_size"

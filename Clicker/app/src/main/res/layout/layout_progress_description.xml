@@ -6,7 +6,7 @@
     android:padding="8dp"
     android:gravity="center_horizontal">
 
-    <include layout="@layout/click_counter_view" />
-    <include layout="@layout/next_level_teaser_view" />
+    <include layout="@layout/view_click_counter" />
+    <include layout="@layout/view_next_level_teaser" />
 
 </LinearLayout>

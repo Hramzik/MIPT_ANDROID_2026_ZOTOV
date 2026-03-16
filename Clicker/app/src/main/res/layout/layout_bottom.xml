@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/statistics_button"
-        layout="@layout/statistics_button"
+        layout="@layout/button_statistics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -15,7 +15,7 @@
 
     <include
         android:id="@+id/authors_button"
-        layout="@layout/authors_button"
+        layout="@layout/button_authors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
