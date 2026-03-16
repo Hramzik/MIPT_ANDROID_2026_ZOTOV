@@ -1,0 +1,35 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="1">
+
+    <TableRow>
+        <TextView
+            android:text="Имя"
+            android:padding="8dp"
+            android:layout_column="0"/>
+        <TextView
+            android:text="Возраст"
+            android:padding="8dp"
+            android:layout_column="1"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Анна"
+            android:padding="8dp"/>
+        <TextView
+            android:text="25"
+            android:padding="8dp"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Иван"
+            android:padding="8dp"/>
+        <TextView
+            android:text="30"
+            android:padding="8dp"/>
+    </TableRow>
+
+</TableLayout>

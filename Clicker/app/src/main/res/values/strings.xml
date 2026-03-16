@@ -7,4 +7,9 @@
     <string name="author_telegram_button_url">https://t.me/The_Eclipse69</string>
 
     <string name="next_level_teaser_text">%1$d clicks left to level %2$d</string>
+
+    <string name="statistics_header_text">Statistics</string>
+    <string name="month_statistics_text">Clicks per month</string>
+    <string name="week_statistics_text">Clicks per week</string>
+    <string name="day_statistics_text">Clicks per day</string>
 </resources>

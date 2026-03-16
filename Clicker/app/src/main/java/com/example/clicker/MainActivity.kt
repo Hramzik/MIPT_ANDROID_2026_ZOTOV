@@ -29,6 +29,11 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.authors_button_toast_text, Toast.LENGTH_SHORT).show()
         }
 
+        val statisticsButton: android.widget.Button = findViewById(R.id.statistics_button)
+        statisticsButton.setOnClickListener {
+            startActivity(android.content.Intent(this, StatisticsActivity::class.java))
+        }
+
         val exitButton: ImageButton = findViewById(R.id.exit_button)
         exitButton.setOnClickListener {
             finishAffinity()

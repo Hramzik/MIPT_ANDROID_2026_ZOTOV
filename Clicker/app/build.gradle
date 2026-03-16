@@ -33,8 +33,9 @@ android {
     sourceSets {
         main {
             res.srcDirs = [
-                    'src/main/res',
-                    'src/main/res/layout/view'
+                'src/main/res',
+                'src/main/res/layout/view',
+                'src/main/res/layout/button',
             ]
         }
     }

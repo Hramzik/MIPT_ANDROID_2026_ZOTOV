@@ -9,5 +9,6 @@
 
     <include layout="@layout/layout_main_content" />
     <include layout="@layout/layout_aux" />
+    <include layout="@layout/layout_statistics_table" />
 
 </FrameLayout>
