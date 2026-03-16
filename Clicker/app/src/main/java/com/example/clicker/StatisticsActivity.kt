@@ -11,6 +11,11 @@ class StatisticsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistics)
 
+        val backButton: android.widget.ImageButton = findViewById(R.id.button_back)
+        backButton.setOnClickListener {
+            startActivity(android.content.Intent(this, MainActivity::class.java))
+        }
+
         clickCounter = ClickCounter.create(this)
 
         val monthValue: TextView = findViewById(R.id.month_value)
