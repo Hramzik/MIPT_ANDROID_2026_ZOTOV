@@ -3,9 +3,9 @@
     <string name="authors_button_text">Авторы</string>
     <string name="next_level_teaser_text">До уровня %2$d осталось %1d кликов</string>
 
-    <string name="statistics_header_text">Статистика</string>
-    <string name="month_statistics_text">Нажатий за месяц</string>
-    <string name="week_statistics_text">Нажатий за неделю</string>
-    <string name="day_statistics_text">Нажатий за день</string>
-    <string name="minute_statistics_text">Нажатий за минуту</string>
+    <string name="statistics_activity_header">Статистика</string>
+    <string name="month_statistics_header">Нажатий за месяц</string>
+    <string name="week_statistics_header">Нажатий за неделю</string>
+    <string name="day_statistics_header">Нажатий за день</string>
+    <string name="minute_statistics_header">Нажатий за минуту</string>
 </resources>

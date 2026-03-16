@@ -8,9 +8,9 @@
 
     <string name="next_level_teaser_text">%1$d clicks left to level %2$d</string>
 
-    <string name="statistics_header_text">Statistics</string>
-    <string name="month_statistics_text">Clicks per month</string>
-    <string name="week_statistics_text">Clicks per week</string>
-    <string name="day_statistics_text">Clicks per day</string>
-    <string name="minute_statistics_text">Clicks per minute</string>
+    <string name="statistics_activity_header">Statistics</string>
+    <string name="month_statistics_header">Clicks per month</string>
+    <string name="week_statistics_header">Clicks per week</string>
+    <string name="day_statistics_header">Clicks per day</string>
+    <string name="minute_statistics_header">Clicks per minute</string>
 </resources>

@@ -11,7 +11,7 @@
             android:id="@+id/month_label"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
-            android:text="@string/month_statistics_text" />
+            android:text="@string/month_statistics_header" />
         <TextView
             android:id="@+id/month_value"
             style="@style/BlackTextBase.Minor"
@@ -24,7 +24,7 @@
             android:id="@+id/week_label"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
-            android:text="@string/week_statistics_text" />
+            android:text="@string/week_statistics_header" />
         <TextView
             android:id="@+id/week_value"
             style="@style/BlackTextBase.Minor"
@@ -37,7 +37,7 @@
             android:id="@+id/day_label"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
-            android:text="@string/day_statistics_text" />
+            android:text="@string/day_statistics_header" />
         <TextView
             android:id="@+id/day_value"
             style="@style/BlackTextBase.Minor"
@@ -50,7 +50,7 @@
             android:id="@+id/minute_label"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
-            android:text="@string/minute_statistics_text" />
+            android:text="@string/minute_statistics_header" />
         <TextView
             android:id="@+id/minute_value"
             style="@style/BlackTextBase.Minor"
