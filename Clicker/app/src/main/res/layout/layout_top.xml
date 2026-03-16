@@ -7,7 +7,6 @@
     android:paddingEnd="8dp">
 
     <include
-        android:id="@+id/left_button_container"
         layout="@layout/layout_top_left_icon_button_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,19 +15,17 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <include
-        android:id="@+id/app_name_view"
         layout="@layout/view_app_name"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/icon_button_size"
+        android:layout_height="@dimen/button_icon_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/mute_button"
         layout="@layout/button_mute"
-        android:layout_width="@dimen/icon_button_size"
-        android:layout_height="@dimen/icon_button_size"
+        android:layout_width="@dimen/button_icon_size"
+        android:layout_height="@dimen/button_icon_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

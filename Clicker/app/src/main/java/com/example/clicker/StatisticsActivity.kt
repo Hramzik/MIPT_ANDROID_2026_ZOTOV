@@ -9,7 +9,7 @@ class StatisticsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_statistics_table)
+        setContentView(R.layout.activity_statistics)
 
         clickCounter = ClickCounter.create(this)
 

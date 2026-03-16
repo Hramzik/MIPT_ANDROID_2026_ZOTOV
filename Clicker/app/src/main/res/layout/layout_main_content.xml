@@ -7,9 +7,8 @@
 
     <include
         layout="@layout/button_main_clicker"
-        android:id="@+id/main_clicker_button"
-        android:layout_width="@dimen/main_clicker_button_size"
-        android:layout_height="@dimen/main_clicker_button_size"
+        android:layout_width="@dimen/button_main_clicker_size"
+        android:layout_height="@dimen/button_main_clicker_size"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +18,7 @@
         layout="@layout/layout_progress_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/main_clicker_button"
+        app:layout_constraintTop_toBottomOf="@id/button_main_clicker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/main_clicker_button_size"
-    android:layout_height="@dimen/main_clicker_button_size"
+    android:id="@+id/button_main_clicker"
+    android:layout_width="@dimen/button_main_clicker_size"
+    android:layout_height="@dimen/button_main_clicker_size"
     android:background="?android:attr/selectableItemBackgroundBorderless"
     android:src="@drawable/banana"
     android:scaleType="fitCenter"
