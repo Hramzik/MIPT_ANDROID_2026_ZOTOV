@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             val remaining = LevelManager.getRemainingClicksToNextLevel(clickCounter.clickCount)
             nextLevelTeaserView.text = getString(R.string.next_level_teaser_text, remaining, level + 1)
         }
-        clickCounter.loadClickCount()
+        clickCounter.loadClickHistory()
         clickCounter.restoreState(savedInstanceState)
     }
 
