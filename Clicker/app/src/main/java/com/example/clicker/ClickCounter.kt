@@ -11,6 +11,7 @@ class ClickCounter private constructor(
 ) {
     data class ClickRecord(val timestamp: Long)
 
+    private val dateManager = DateManager()
     private val clickHistory = mutableListOf<ClickRecord>()
     private var listener: (() -> Unit)? = null
 
@@ -64,20 +65,35 @@ class ClickCounter private constructor(
     }
 
     fun getTodayClicks(): Int {
+            val now = System.currentTimeMillis()
+            val startOfDay = dateManager.getStartOfDay(now)
+            return clickHistory.count { it.timestamp >= startOfDay }
+        }
+
+    fun getDailyClicks(): Map<String, Int> {
         val now = System.currentTimeMillis()
-        val startOfDay = getStartOfDay(now)
-        return clickHistory.count { it.timestamp >= startOfDay }
+        val startOfMonth = dateManager.getStartOfMonth(now)
+        val dailyClicks = mutableMapOf<String, Int>()
+        
+        for (record in clickHistory) {
+            if (record.timestamp >= startOfMonth) {
+                val dateKey = dateManager.getDateString(record.timestamp)
+                dailyClicks[dateKey] = dailyClicks.getOrDefault(dateKey, 0) + 1
+            }
+        }
+        
+        return dailyClicks
     }
 
     fun getWeekClicks(): Int {
         val now = System.currentTimeMillis()
-        val startOfWeek = getStartOfWeek(now)
+        val startOfWeek = dateManager.getStartOfWeek(now)
         return clickHistory.count { it.timestamp >= startOfWeek }
     }
 
     fun getMonthClicks(): Int {
         val now = System.currentTimeMillis()
-        val startOfMonth = getStartOfMonth(now)
+        val startOfMonth = dateManager.getStartOfMonth(now)
         return clickHistory.count { it.timestamp >= startOfMonth }
     }
 
@@ -87,38 +103,25 @@ class ClickCounter private constructor(
         return clickHistory.count { it.timestamp >= oneMinuteAgo }
     }
 
-    private fun getStartOfDay(timestamp: Long): Long {
-        val calendar = java.util.Calendar.getInstance().apply {
-            timeInMillis = timestamp
-            set(java.util.Calendar.HOUR_OF_DAY, 0)
-            set(java.util.Calendar.MINUTE, 0)
-            set(java.util.Calendar.SECOND, 0)
-            set(java.util.Calendar.MILLISECOND, 0)
+    fun getLastMinuteClicksByInterval(): List<Int> {
+        val now = System.currentTimeMillis()
+        val oneMinuteAgo = now - TimeUnit.MINUTES.toMillis(1)
+        val intervalDuration = TimeUnit.SECONDS.toMillis(10)
+        val intervals = 6
+
+        val result = MutableList(intervals) { 0 }
+
+        for (record in clickHistory) {
+            if (record.timestamp >= oneMinuteAgo && record.timestamp <= now) {
+                val timeSinceStart = record.timestamp - oneMinuteAgo
+                val intervalIndex = (timeSinceStart / intervalDuration).toInt()
+                if (intervalIndex >= 0 && intervalIndex < intervals) {
+                    result[intervalIndex]++
+                }
+            }
         }
-        return calendar.timeInMillis
+
+        return result
     }
 
-    private fun getStartOfWeek(timestamp: Long): Long {
-        val calendar = java.util.Calendar.getInstance().apply {
-            timeInMillis = timestamp
-            set(java.util.Calendar.DAY_OF_WEEK, firstDayOfWeek)
-            set(java.util.Calendar.HOUR_OF_DAY, 0)
-            set(java.util.Calendar.MINUTE, 0)
-            set(java.util.Calendar.SECOND, 0)
-            set(java.util.Calendar.MILLISECOND, 0)
-        }
-        return calendar.timeInMillis
-    }
-
-    private fun getStartOfMonth(timestamp: Long): Long {
-        val calendar = java.util.Calendar.getInstance().apply {
-            timeInMillis = timestamp
-            set(java.util.Calendar.DAY_OF_MONTH, 1)
-            set(java.util.Calendar.HOUR_OF_DAY, 0)
-            set(java.util.Calendar.MINUTE, 0)
-            set(java.util.Calendar.SECOND, 0)
-            set(java.util.Calendar.MILLISECOND, 0)
-        }
-        return calendar.timeInMillis
-    }
 }

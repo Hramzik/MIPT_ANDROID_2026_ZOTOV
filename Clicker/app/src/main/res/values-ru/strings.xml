@@ -4,6 +4,7 @@
     <string name="next_level_teaser_text">До уровня %2$d осталось %1d кликов</string>
 
     <string name="statistics_activity_header">Статистика</string>
+    <string name="click_chart_header">График нажатий</string>
     <string name="month_statistics_header">Нажатий за месяц</string>
     <string name="week_statistics_header">Нажатий за неделю</string>
     <string name="day_statistics_header">Нажатий за день</string>

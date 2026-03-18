@@ -3,9 +3,12 @@ package com.example.clicker
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import com.github.mikephil.charting.charts.LineChart
 
 class StatisticsActivity : AppCompatActivity() {
     private lateinit var clickCounter: ClickCounter
+    private lateinit var clicksChart: LineChart
+    private lateinit var chartManager: ChartManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,15 +20,13 @@ class StatisticsActivity : AppCompatActivity() {
         }
 
         clickCounter = ClickCounter.create(this)
+        clicksChart = findViewById(R.id.view_click_chart)
+        
+        chartManager = ChartManager(clicksChart, clickCounter)
+        chartManager.updateChart()
+    }
 
-        val monthValue: TextView = findViewById(R.id.month_value)
-        val weekValue: TextView = findViewById(R.id.week_value)
-        val dayValue: TextView = findViewById(R.id.day_value)
-        val minuteValue: TextView = findViewById(R.id.minute_value)
-
-        monthValue.text = clickCounter.getMonthClicks().toString()
-        weekValue.text = clickCounter.getWeekClicks().toString()
-        dayValue.text = clickCounter.getTodayClicks().toString()
-        minuteValue.text = clickCounter.getLastMinuteClicks().toString()
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }
