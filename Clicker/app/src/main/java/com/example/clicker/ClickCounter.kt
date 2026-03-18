@@ -13,7 +13,7 @@ class ClickCounter private constructor(
 
     private val dateManager = DateManager()
     private val clickHistory = mutableListOf<ClickRecord>()
-    private var listener: (() -> Unit)? = null
+    private var clickUpdateListener: (() -> Unit)? = null
 
     companion object {
         fun create(context: Context): ClickCounter {
@@ -25,14 +25,14 @@ class ClickCounter private constructor(
         loadClickHistory()
     }
 
-    fun setClickListener(listener: () -> Unit) {
-        this.listener = listener
+    fun setClickUpdateListener(listener: () -> Unit) {
+        this.clickUpdateListener = listener
     }
 
     fun increment() {
         clickHistory.add(ClickRecord(System.currentTimeMillis()))
         saveClickHistory()
-        listener?.invoke()
+        clickUpdateListener?.invoke()
     }
 
     val clickCount: Int
@@ -56,6 +56,8 @@ class ClickCounter private constructor(
         for (part in parts) {
             clickHistory.add(ClickRecord(part.toLong()))
         }
+
+        clickUpdateListener?.invoke()
     }
 
     private fun saveClickHistory() {

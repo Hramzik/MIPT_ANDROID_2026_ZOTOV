@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
         val clickCounterView: TextView = findViewById(R.id.view_click_counter)
         val nextLevelTeaserView: TextView = findViewById(R.id.view_next_level_teaser)
-        clickCounter.setClickListener {
+        clickCounter.setClickUpdateListener {
             clickCounterView.text = clickCounter.clickCount.toString()
             val level = LevelManager.getLevel(clickCounter.clickCount)
             val remaining = LevelManager.getRemainingClicksToNextLevel(clickCounter.clickCount)
