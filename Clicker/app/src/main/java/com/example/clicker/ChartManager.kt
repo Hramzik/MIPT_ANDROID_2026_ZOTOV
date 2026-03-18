@@ -1,10 +1,12 @@
 package com.example.clicker
 
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 
 class ChartManager(
@@ -16,6 +18,18 @@ class ChartManager(
     }
 
     private var chartMode: ChartMode = ChartMode.LAST_MINUTE
+
+    private inner class SecondsAgoFormatter : ValueFormatter() {
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return "${45 - value.toInt()}s ago"
+        }
+    }
+
+    private inner class ClicksFormatter : ValueFormatter() {
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return if (value == 0f) "" else value.toString()
+        }
+    }
 
     init {
         configureChart()
@@ -31,10 +45,15 @@ class ChartManager(
             setPinchZoom(true)
 
             axisRight.isEnabled = false
-            axisLeft.setDrawGridLines(false)
+            axisLeft.apply {
+                setDrawGridLines(false)
+                axisMinimum = 0f
+                valueFormatter = ClicksFormatter()
+            }
             xAxis.apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 setDrawGridLines(false)
+                setLabelCount(4, true)
             }
         }
     }
@@ -43,6 +62,11 @@ class ChartManager(
         val dataSet = collectDataSet()
         
         configureDataSet(dataSet)
+        
+        if (chartMode == ChartMode.LAST_MINUTE) {
+            clicksChart.xAxis.valueFormatter = SecondsAgoFormatter()
+        }
+        
         showDataSet(dataSet)
     }
 
@@ -68,9 +92,9 @@ class ChartManager(
             ChartMode.LAST_MINUTE -> {
                 val intervalClicks = clickCounter.getLastMinuteClicksByInterval()
                 entries = intervalClicks.mapIndexed { index, clicks ->
-                    Entry((index * 10).toFloat(), clicks.toFloat())
+                    Entry((index * 15).toFloat(), clicks.toFloat())
                 }
-                title = "Clicks (Last Minute, 10-sec intervals)"
+                title = "Clicks (Last Minute, 15-sec intervals)"
             }
         }
 

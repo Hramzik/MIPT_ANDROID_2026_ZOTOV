@@ -106,8 +106,8 @@ class ClickCounter private constructor(
     fun getLastMinuteClicksByInterval(): List<Int> {
         val now = System.currentTimeMillis()
         val oneMinuteAgo = now - TimeUnit.MINUTES.toMillis(1)
-        val intervalDuration = TimeUnit.SECONDS.toMillis(10)
-        val intervals = 6
+        val intervalDuration = TimeUnit.SECONDS.toMillis(15)
+        val intervals = 4
 
         val result = MutableList(intervals) { 0 }
 
