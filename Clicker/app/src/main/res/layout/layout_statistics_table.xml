@@ -8,12 +8,11 @@
 
     <TableRow>
         <TextView
-            android:id="@+id/month_label"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
             android:text="@string/month_statistics_header" />
         <TextView
-            android:id="@+id/month_value"
+            android:id="@+id/statistics_table_month_click_count"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
             android:gravity="right"
@@ -22,12 +21,11 @@
 
     <TableRow>
         <TextView
-            android:id="@+id/week_label"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
             android:text="@string/week_statistics_header" />
         <TextView
-            android:id="@+id/week_value"
+            android:id="@+id/statistics_table_week_click_count"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
             android:gravity="right"
@@ -36,12 +34,11 @@
 
     <TableRow>
         <TextView
-            android:id="@+id/day_label"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
             android:text="@string/day_statistics_header" />
         <TextView
-            android:id="@+id/day_value"
+            android:id="@+id/statistics_table_day_click_count"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
             android:gravity="right"
@@ -50,12 +47,11 @@
 
     <TableRow>
         <TextView
-            android:id="@+id/minute_label"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
             android:text="@string/minute_statistics_header" />
         <TextView
-            android:id="@+id/minute_value"
+            android:id="@+id/statistics_table_minute_click_count"
             style="@style/BlackTextBase.Minor"
             android:padding="8dp"
             android:gravity="right"

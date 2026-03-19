@@ -66,7 +66,7 @@ class ClickCounter private constructor(
         prefs.edit().putString(keyClickHistory, json).apply()
     }
 
-    fun getTodayClicks(): Int {
+    fun getTodayClickCount(): Int {
             val now = System.currentTimeMillis()
             val startOfDay = dateManager.getStartOfDay(now)
             return clickHistory.count { it.timestamp >= startOfDay }
@@ -87,19 +87,19 @@ class ClickCounter private constructor(
         return dailyClicks
     }
 
-    fun getWeekClicks(): Int {
+    fun getWeekClickCount(): Int {
         val now = System.currentTimeMillis()
         val startOfWeek = dateManager.getStartOfWeek(now)
         return clickHistory.count { it.timestamp >= startOfWeek }
     }
 
-    fun getMonthClicks(): Int {
+    fun getMonthClickCount(): Int {
         val now = System.currentTimeMillis()
         val startOfMonth = dateManager.getStartOfMonth(now)
         return clickHistory.count { it.timestamp >= startOfMonth }
     }
 
-    fun getLastMinuteClicks(): Int {
+    fun getLastMinuteClickCount(): Int {
         val now = System.currentTimeMillis()
         val oneMinuteAgo = now - TimeUnit.MINUTES.toMillis(1)
         return clickHistory.count { it.timestamp >= oneMinuteAgo }
