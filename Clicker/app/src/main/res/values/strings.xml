@@ -15,4 +15,5 @@
     <string name="day_statistics_header">Clicks per day</string>
     <string name="minute_statistics_header">Clicks per minute</string>
     <string name="click_chart_seconds_ago_suffix">s ago</string>
+    <string name="button_toggle_scale_text">Toggle scale</string>
 </resources>

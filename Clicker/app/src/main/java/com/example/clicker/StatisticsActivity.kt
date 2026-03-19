@@ -18,6 +18,7 @@ class StatisticsActivity : AppCompatActivity() {
 
         configureBackButton()
         configureChart()
+        configureToggleScaleButton()
         configureTable()
     }
 
@@ -32,6 +33,13 @@ class StatisticsActivity : AppCompatActivity() {
         clicksChart = findViewById(R.id.view_click_chart)
         chartManager = ChartManager(clicksChart, clickCounter, this)
         chartManager.updateChart()
+    }
+
+    private fun configureToggleScaleButton() {
+        val toggleScaleButton: android.widget.Button = findViewById(R.id.button_toggle_scale)
+        toggleScaleButton.setOnClickListener {
+            chartManager.switchChartMode()
+        }
     }
 
     private fun configureTable() {

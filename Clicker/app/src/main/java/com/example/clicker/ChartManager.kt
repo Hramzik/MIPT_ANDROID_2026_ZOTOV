@@ -116,8 +116,12 @@ class ChartManager(
         dataSet.valueTextColor = ColorTemplate.COLORFUL_COLORS[0]
     }
 
-    fun switchChartMode(mode: ChartMode) {
-        chartMode = mode
+    fun switchChartMode() {
+        chartMode = if (chartMode == ChartMode.LAST_MINUTE) {
+            ChartMode.LAST_MONTH
+        } else {
+            ChartMode.LAST_MINUTE
+        }
         updateChart()
     }
 }
