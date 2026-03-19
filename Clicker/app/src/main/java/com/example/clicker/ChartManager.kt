@@ -14,12 +14,14 @@ class ChartManager(
     private val clicksChart: LineChart,
     private val clickCounter: ClickCounter,
     private val context: Context,
-) {
+    ) {
     enum class ChartMode {
         LAST_MONTH, LAST_MINUTE
     }
 
-    private var chartMode: ChartMode = ChartMode.LAST_MINUTE
+    private var chartMode: ChartMode = ChartMode.LAST_MONTH
+    private var lastMonthDateLabels: List<String> = emptyList()
+    private val dateManager: DateManager = DateManager()
 
     private inner class SecondsAgoFormatter : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
@@ -30,7 +32,18 @@ class ChartManager(
 
     private inner class ClicksFormatter : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return if (value == 0f) "" else value.toString()
+            return if (value == 0f) "" else value.toInt().toString()
+        }
+    }
+
+    private inner class DateFormatter : ValueFormatter() {
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            val index = value.toInt()
+            return if (index >= 0 && index < lastMonthDateLabels.size) {
+                lastMonthDateLabels[index]
+            } else {
+                ""
+            }
         }
     }
 
@@ -51,6 +64,7 @@ class ChartManager(
             axisLeft.apply {
                 setDrawGridLines(false)
                 axisMinimum = 0f
+                granularity = 1f
                 valueFormatter = ClicksFormatter()
             }
             xAxis.apply {
@@ -66,8 +80,13 @@ class ChartManager(
         
         configureDataSet(dataSet)
         
-        if (chartMode == ChartMode.LAST_MINUTE) {
-            clicksChart.xAxis.valueFormatter = SecondsAgoFormatter()
+        when (chartMode) {
+            ChartMode.LAST_MINUTE -> {
+                clicksChart.xAxis.valueFormatter = SecondsAgoFormatter()
+            }
+            ChartMode.LAST_MONTH -> {
+                clicksChart.xAxis.valueFormatter = DateFormatter()
+            }
         }
         
         showDataSet(dataSet)
@@ -81,27 +100,23 @@ class ChartManager(
 
     private fun collectDataSet(): LineDataSet {
         val entries: List<Entry>
-        val title: String
 
         when (chartMode) {
             ChartMode.LAST_MONTH -> {
-                val dailyClicks = clickCounter.getDailyClicks()
-                val sortedDates = dailyClicks.keys.sorted()
-                entries = sortedDates.mapIndexed { index, date ->
-                    Entry(index.toFloat(), dailyClicks[date]?.toFloat() ?: 0f)
+                lastMonthDateLabels = dateManager.getLastNDayLabels(30)
+
+                entries = clickCounter.getLastNDaylyClicks(30).mapIndexed { index, clickCount ->
+                    Entry(index.toFloat(), clickCount.toFloat())
                 }
-                title = "Daily Clicks (Last 30 Days)"
             }
             ChartMode.LAST_MINUTE -> {
-                val intervalClicks = clickCounter.getLastMinuteClicksByInterval()
-                entries = intervalClicks.mapIndexed { index, clicks ->
-                    Entry((index * 15).toFloat(), clicks.toFloat())
+                entries = clickCounter.getLastMinuteClicksByInterval().mapIndexed { index, clickCount ->
+                    Entry((index * 15).toFloat(), clickCount.toFloat())
                 }
-                title = "Clicks (Last Minute, 15-sec intervals)"
             }
         }
 
-        return LineDataSet(entries, title)
+        return LineDataSet(entries, "")
     }
 
     private fun configureDataSet(dataSet: LineDataSet) {

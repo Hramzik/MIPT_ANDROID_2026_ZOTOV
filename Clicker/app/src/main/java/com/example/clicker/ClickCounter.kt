@@ -87,6 +87,22 @@ class ClickCounter private constructor(
         return dailyClicks
     }
 
+    fun getLastNDaylyClicks(daysCount: Int): List<Int> {
+        val calendar = dateManager.getNDaysAgoCalendar(daysCount - 1)
+        val clickCounts = mutableListOf<Int>()
+
+        for (i in 0 until daysCount) {
+            val dayStart = calendar.timeInMillis
+            calendar.add(java.util.Calendar.DAY_OF_MONTH, 1)
+            val dayEnd = calendar.timeInMillis
+            
+            val clicksOnDay = clickHistory.count { it.timestamp >= dayStart && it.timestamp < dayEnd }
+            clickCounts.add(clicksOnDay)
+        }
+
+        return clickCounts
+    }
+
     fun getWeekClickCount(): Int {
         val now = System.currentTimeMillis()
         val startOfWeek = dateManager.getStartOfWeek(now)

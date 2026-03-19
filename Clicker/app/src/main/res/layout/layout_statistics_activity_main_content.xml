@@ -12,7 +12,7 @@
         android:layout_margin="32dp" />
 
     <include
-        layout="@layout/layout_titled_click_chart"
+        layout="@layout/layout_decorated_click_chart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="48dp" />
