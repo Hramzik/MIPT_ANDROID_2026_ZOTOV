@@ -22,7 +22,7 @@ class StatisticsActivity : AppCompatActivity() {
         clickCounter = ClickCounter.create(this)
         clicksChart = findViewById(R.id.view_click_chart)
         
-        chartManager = ChartManager(clicksChart, clickCounter)
+        chartManager = ChartManager(clicksChart, clickCounter, this)
         chartManager.updateChart()
     }
 

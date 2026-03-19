@@ -1,5 +1,6 @@
 package com.example.clicker
 
+import android.content.Context
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -11,7 +12,8 @@ import com.github.mikephil.charting.utils.ColorTemplate
 
 class ChartManager(
     private val clicksChart: LineChart,
-    private val clickCounter: ClickCounter
+    private val clickCounter: ClickCounter,
+    private val context: Context,
 ) {
     enum class ChartMode {
         LAST_MONTH, LAST_MINUTE
@@ -21,7 +23,8 @@ class ChartManager(
 
     private inner class SecondsAgoFormatter : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return "${45 - value.toInt()}s ago"
+            val suffix = context.getString(R.string.click_chart_seconds_ago_suffix)
+            return "${45 - value.toInt()}$suffix"
         }
     }
 
