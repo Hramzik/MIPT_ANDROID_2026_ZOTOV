@@ -3,6 +3,9 @@ package com.example.clicker
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.ViewCompat
 import com.github.mikephil.charting.charts.LineChart
 
 class StatisticsActivity : AppCompatActivity() {
@@ -12,7 +15,13 @@ class StatisticsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_statistics)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_statistics)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         clickCounter = ClickCounter.create(this)
 
