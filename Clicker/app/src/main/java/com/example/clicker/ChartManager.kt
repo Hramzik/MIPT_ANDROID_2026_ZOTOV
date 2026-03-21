@@ -1,6 +1,7 @@
 package com.example.clicker
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -19,6 +20,12 @@ class ChartManager(
         LAST_MONTH, LAST_MINUTE
     }
 
+    companion object {
+        private const val PREFS_NAME = "chart_prefs"
+        private const val KEY_CHART_MODE = "chart_mode"
+    }
+
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private var chartMode: ChartMode = ChartMode.LAST_MONTH
     private var lastMonthDateLabels: List<String> = emptyList()
     private val dateManager: DateManager = DateManager()
@@ -48,6 +55,7 @@ class ChartManager(
     }
 
     init {
+        loadSettings()
         configureChart()
     }
 
@@ -131,12 +139,25 @@ class ChartManager(
         dataSet.valueTextColor = ColorTemplate.COLORFUL_COLORS[0]
     }
 
+    private fun loadSettings() {
+        val storedModeName = sharedPreferences.getString(KEY_CHART_MODE, ChartMode.LAST_MONTH.name)
+        ChartMode.entries.firstOrNull { it.name == storedModeName }?.let {
+            chartMode = it
+        }
+    }
+
+    private fun saveSettings() {
+        sharedPreferences.edit().putString(KEY_CHART_MODE, chartMode.name).apply()
+    }
+
     fun switchChartMode() {
         chartMode = if (chartMode == ChartMode.LAST_MINUTE) {
             ChartMode.LAST_MONTH
         } else {
             ChartMode.LAST_MINUTE
         }
+
+        saveSettings()
         updateChart()
     }
 }
