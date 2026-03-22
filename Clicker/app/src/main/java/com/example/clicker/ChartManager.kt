@@ -70,6 +70,8 @@ class ChartManager(
         clicksChart.apply {
             description.isEnabled = false
             legend.isEnabled = false
+            setExtraLeftOffset(10f) // Bruh, this library is total shit, why do I have to do this myself
+            setExtraRightOffset(30f)
             setTouchEnabled(false)
             setDragEnabled(false)
             setScaleEnabled(false)
@@ -86,7 +88,6 @@ class ChartManager(
                 position = XAxis.XAxisPosition.BOTTOM
                 setDrawGridLines(false)
                 setLabelCount(4, true)
-                setAvoidFirstLastClipping(true)
             }
             axisTextColor?.let {
                 axisLeft.textColor = it
