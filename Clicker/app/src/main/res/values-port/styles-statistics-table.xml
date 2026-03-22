@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="StatisticsTable.LayoutWidth">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:stretchColumns">1</item>
+    </style>
+</resources>

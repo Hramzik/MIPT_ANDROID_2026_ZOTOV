@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_titled_statistics_table"
-    android:layout_width="match_parent"
+    style="@style/StatisticsTable.LayoutWidth"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/view_statistics_activity_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
-
-    <include
-        layout="@layout/layout_statistics_table"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <include layout="@layout/view_statistics_table_header" />
+    <include layout="@layout/layout_statistics_table" />
 
 </LinearLayout>

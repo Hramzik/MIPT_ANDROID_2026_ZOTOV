@@ -3,7 +3,7 @@
     <string name="button_authors_text">Авторы</string>
     <string name="next_level_teaser_text">До уровня %2$d осталось %1d кликов</string>
 
-    <string name="statistics_activity_header">Статистика</string>
+    <string name="statistics_table_header">Статистика</string>
     <string name="click_chart_header">График нажатий</string>
     <string name="month_statistics_label">Нажатий за месяц</string>
     <string name="week_statistics_label">Нажатий за неделю</string>

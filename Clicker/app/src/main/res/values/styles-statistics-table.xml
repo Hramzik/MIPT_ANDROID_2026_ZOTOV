@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="StatisticsTable"></style>
+
+    <style name="StatisticsTable.LayoutWidth">
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
     <style name="StatisticsTable.TextView" parent="TextAppearance.Minor">
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
