@@ -3,5 +3,4 @@
     android:id="@+id/button_exit"
     android:layout_width="@dimen/button_icon_size"
     android:layout_height="@dimen/button_icon_size"
-    android:background="?attr/selectableItemBackgroundBorderless"
     android:src="@drawable/baseline_exit_to_app_24" />
