@@ -82,6 +82,7 @@ class ChartManager(
                 position = XAxis.XAxisPosition.BOTTOM
                 setDrawGridLines(false)
                 setLabelCount(4, true)
+                setAvoidFirstLastClipping(true)
             }
             axisTextColor?.let {
                 axisLeft.textColor = it
@@ -92,9 +93,9 @@ class ChartManager(
 
     fun updateChart() {
         val dataSet = collectDataSet()
-        
+
         configureDataSet(dataSet)
-        
+
         when (chartMode) {
             ChartMode.LAST_MINUTE -> {
                 clicksChart.xAxis.valueFormatter = SecondsAgoFormatter()
@@ -103,7 +104,7 @@ class ChartManager(
                 clicksChart.xAxis.valueFormatter = DateFormatter()
             }
         }
-        
+
         showDataSet(dataSet)
     }
 
