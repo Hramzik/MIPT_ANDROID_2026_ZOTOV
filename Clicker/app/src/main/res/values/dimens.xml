@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_icon_size">50dp</dimen>
+    <dimen name="button_icon_size">48dp</dimen>
     <dimen name="button_main_clicker_size">120dp</dimen>
 </resources>
