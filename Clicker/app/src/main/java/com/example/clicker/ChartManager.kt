@@ -2,6 +2,7 @@ package com.example.clicker
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.clicker.utils.colorFromAttr
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -60,13 +61,15 @@ class ChartManager(
     }
 
     private fun configureChart() {
+        val axisTextColor = context.colorFromAttr(com.google.android.material.R.attr.colorOnSurface)
+
         clicksChart.apply {
             description.isEnabled = false
             legend.isEnabled = false
-            setTouchEnabled(true)
-            setDragEnabled(true)
-            setScaleEnabled(true)
-            setPinchZoom(true)
+            setTouchEnabled(false)
+            setDragEnabled(false)
+            setScaleEnabled(false)
+            setPinchZoom(false)
 
             axisRight.isEnabled = false
             axisLeft.apply {
@@ -79,6 +82,10 @@ class ChartManager(
                 position = XAxis.XAxisPosition.BOTTOM
                 setDrawGridLines(false)
                 setLabelCount(4, true)
+            }
+            axisTextColor?.let {
+                axisLeft.textColor = it
+                xAxis.textColor = it
             }
         }
     }

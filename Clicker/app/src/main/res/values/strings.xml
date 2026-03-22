@@ -10,10 +10,10 @@
 
     <string name="statistics_activity_header">Statistics</string>
     <string name="click_chart_header">Click chart</string>
-    <string name="month_statistics_header">Clicks per month</string>
-    <string name="week_statistics_header">Clicks per week</string>
-    <string name="day_statistics_header">Clicks per day</string>
-    <string name="minute_statistics_header">Clicks per minute</string>
+    <string name="month_statistics_label">Clicks per month</string>
+    <string name="week_statistics_label">Clicks per week</string>
+    <string name="day_statistics_label">Clicks per day</string>
+    <string name="minute_statistics_label">Clicks per minute</string>
     <string name="click_chart_seconds_ago_suffix">s ago</string>
     <string name="button_toggle_scale_text">Toggle scale</string>
 </resources>
