@@ -33,8 +33,12 @@ class ChartManager(
 
     private inner class SecondsAgoFormatter : ValueFormatter() {
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            val secondsAgo = 45 - value.toInt()
+            if (secondsAgo == 0) {
+                return context.getString(R.string.click_chart_just_now)
+            }
             val suffix = context.getString(R.string.click_chart_seconds_ago_suffix)
-            return "${45 - value.toInt()}$suffix"
+            return "$secondsAgo$suffix"
         }
     }
 
@@ -119,7 +123,11 @@ class ChartManager(
 
         when (chartMode) {
             ChartMode.LAST_MONTH -> {
-                lastMonthDateLabels = dateManager.getLastNDayLabels(30)
+                val rawLabels = dateManager.getLastNDayLabels(30)
+                val todayLabel = context.getString(R.string.click_chart_today)
+                lastMonthDateLabels = rawLabels.mapIndexed { index, label ->
+                    if (index == rawLabels.lastIndex) todayLabel else label
+                }
 
                 entries = clickCounter.getLastNDaylyClicks(30).mapIndexed { index, clickCount ->
                     Entry(index.toFloat(), clickCount.toFloat())

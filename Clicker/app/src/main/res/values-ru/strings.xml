@@ -10,5 +10,7 @@
     <string name="day_statistics_label">Нажатий за день</string>
     <string name="minute_statistics_label">Нажатий за минуту</string>
     <string name="click_chart_seconds_ago_suffix">с назад</string>
+    <string name="click_chart_just_now">Только что</string>
+    <string name="click_chart_today">Сегодня</string>
     <string name="button_toggle_scale_text">Переключить масштаб</string>
 </resources>
