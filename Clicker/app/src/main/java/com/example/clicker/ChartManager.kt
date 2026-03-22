@@ -136,15 +136,34 @@ class ChartManager(
     }
 
     private fun configureDataSet(dataSet: LineDataSet) {
-        dataSet.color = ColorTemplate.COLORFUL_COLORS[0]
+        val baseColor = ColorTemplate.COLORFUL_COLORS[0]
+        val highlightedPointColor = ColorTemplate.COLORFUL_COLORS[3]
+
+        dataSet.color = baseColor
         dataSet.lineWidth = 2f
         dataSet.circleRadius = 5f
-        dataSet.setCircleColor(ColorTemplate.COLORFUL_COLORS[0])
-        dataSet.circleHoleColor = ColorTemplate.COLORFUL_COLORS[0]
+        dataSet.setCircleColor(baseColor)
         dataSet.mode = LineDataSet.Mode.LINEAR
         dataSet.setDrawValues(false)
         dataSet.valueTextSize = 12f
-        dataSet.valueTextColor = ColorTemplate.COLORFUL_COLORS[0]
+        dataSet.valueTextColor = baseColor
+
+        if (chartMode == ChartMode.LAST_MONTH) {
+            val highlightedIndices = calculateMonthHighlightIndices(dataSet.entryCount)
+            dataSet.circleColors = MutableList(dataSet.entryCount) { index ->
+                if (index in highlightedIndices) highlightedPointColor else baseColor
+            }
+        }
+    }
+
+    private fun calculateMonthHighlightIndices(pointCount: Int, labelCount: Int = 4): Set<Int> {
+        val minX = 0f
+        val maxX = (pointCount - 1).toFloat()
+        val interval = (maxX - minX) / (labelCount - 1)
+
+        return (0 until labelCount).mapTo(mutableSetOf()) { index ->
+            (minX + index * interval).toInt()
+        }
     }
 
     private fun loadSettings() {
