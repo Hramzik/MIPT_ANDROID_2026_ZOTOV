@@ -10,6 +10,8 @@
         layout="@layout/button_back"
         android:layout_width="@dimen/button_icon_size"
         android:layout_height="@dimen/button_icon_size"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
