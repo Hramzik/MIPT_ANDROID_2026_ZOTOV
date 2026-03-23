@@ -12,7 +12,6 @@ import com.github.mikephil.charting.charts.LineChart
 class StatisticsActivity : AppCompatActivity() {
     private val clickViewModel: ClickHistoryViewModel by viewModels()
     private lateinit var clickCounter: ClickCounter
-    private lateinit var clicksChart: LineChart
     private lateinit var chartManager: ChartManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,33 +26,34 @@ class StatisticsActivity : AppCompatActivity() {
 
         clickCounter = ClickCounter(clickViewModel.clickHistory)
 
-        configureBackButton()
-        configureChart()
-        configureToggleScaleButton()
-        configureTable()
+        setupBackButton()
+        setupTable()
+        setupChart()
     }
 
-    private fun configureBackButton() {
+    private fun setupBackButton() {
         val backButton: android.widget.ImageButton = findViewById(R.id.button_back)
         backButton.setOnClickListener {
             finish()
         }
     }
 
-    private fun configureChart() {
-        clicksChart = findViewById(R.id.view_click_chart)
+    private fun setupChart() {
+        val clicksChart: LineChart = findViewById(R.id.view_click_chart)
         chartManager = ChartManager(clicksChart, clickCounter, this)
         chartManager.updateChart()
+
+        setupToggleScaleButton()
     }
 
-    private fun configureToggleScaleButton() {
+    private fun setupToggleScaleButton() {
         val toggleScaleButton: android.widget.Button = findViewById(R.id.button_toggle_scale)
         toggleScaleButton.setOnClickListener {
             chartManager.switchChartMode()
         }
     }
 
-    private fun configureTable() {
+    private fun setupTable() {
         val monthClickCountView: TextView = findViewById(R.id.statistics_table_month_click_count)
         val weekClickCountView: TextView = findViewById(R.id.statistics_table_week_click_count)
         val dayClickCountView: TextView = findViewById(R.id.statistics_table_day_click_count)

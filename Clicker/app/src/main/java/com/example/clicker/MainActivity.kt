@@ -15,10 +15,31 @@ class MainActivity : AppCompatActivity() {
     private lateinit var clickCounter: ClickCounter
     private lateinit var clickRegistrator: ClickRegistrator
     private lateinit var vibrationManager: VibrationManager
-    private lateinit var muteButton: ImageButton
+
+    private lateinit var clickCounterView: TextView
+    private lateinit var nextLevelTeaserView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupLayout()
+        getViewsById()
+        setupAuxButtons()
+        setupMainClickerButton()
+
+        OnClickCountUpdate()
+    }
+
+    private fun getViewsById() {
+        clickCounterView = findViewById(R.id.view_click_counter)
+        nextLevelTeaserView = findViewById(R.id.view_next_level_teaser)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        clickViewModel.saveOnDisk()
+    }
+
+    private fun setupLayout() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_main)) { v, insets ->
@@ -26,7 +47,9 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
 
+    private fun setupAuxButtons() {
         val authorsButton: TextView = findViewById(R.id.button_authors)
         authorsButton.setOnClickListener {
             Toast.makeText(this, R.string.button_authors_toast_text, Toast.LENGTH_SHORT).show()
@@ -49,8 +72,13 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        setupMuteButton()
+    }
+
+    private fun setupMuteButton() {
         vibrationManager = VibrationManager(this)
         val muteButton: ImageButton = findViewById(R.id.button_mute)
+
         vibrationManager.setOnVibrationStateChangeListener {
             if (vibrationManager.isVibrationEnabled) {
                 muteButton.setImageResource(R.drawable.baseline_volume_up_24)
@@ -62,7 +90,9 @@ class MainActivity : AppCompatActivity() {
         muteButton.setOnClickListener {
             vibrationManager.toggleVibration()
         }
+    }
 
+    private fun setupMainClickerButton() {
         clickCounter = ClickCounter(clickViewModel.clickHistory)
         clickRegistrator = ClickRegistrator(clickViewModel.clickHistory)
 
@@ -72,25 +102,15 @@ class MainActivity : AppCompatActivity() {
             clickRegistrator.registerClick()
         }
 
-        val clickCounterView: TextView = findViewById(R.id.view_click_counter)
-        val nextLevelTeaserView: TextView = findViewById(R.id.view_next_level_teaser)
-
         clickRegistrator.setClickCountUpdateListener {
-            OnClickCountUpdate(clickCounterView, nextLevelTeaserView)
+            OnClickCountUpdate()
         }
-
-        OnClickCountUpdate(clickCounterView, nextLevelTeaserView)
     }
 
-    override fun onPause() {
-        super.onPause()
-        clickViewModel.saveOnDisk()
-    }
-
-    private fun OnClickCountUpdate(clickCounterView: TextView, nextLevelTeaserView: TextView) {
-        clickCounterView.text = clickCounter.clickCount.toString()
+    private fun OnClickCountUpdate() {
         val level = LevelManager.getLevel(clickCounter.clickCount)
         val remaining = LevelManager.getRemainingClicksToNextLevel(clickCounter.clickCount)
+        clickCounterView.text = clickCounter.clickCount.toString()
         nextLevelTeaserView.text = getString(R.string.next_level_teaser_text, remaining, level + 1)
     }
 }
