@@ -5,12 +5,15 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
+    private val clickViewModel: ClickHistoryViewModel by viewModels()
     private lateinit var clickCounter: ClickCounter
+    private lateinit var clickRegistrator: ClickRegistrator
     private lateinit var vibrationManager: VibrationManager
     private lateinit var muteButton: ImageButton
 
@@ -60,28 +63,34 @@ class MainActivity : AppCompatActivity() {
             vibrationManager.toggleVibration()
         }
 
-        clickCounter = ClickCounter.create(this)
+        clickCounter = ClickCounter(clickViewModel.clickHistory)
+        clickRegistrator = ClickRegistrator(clickViewModel.clickHistory)
 
         val mainClickerButton: ImageButton = findViewById(R.id.button_main_clicker)
         mainClickerButton.setOnClickListener {
             vibrationManager.tryVibrate()
-            clickCounter.increment()
+            clickRegistrator.registerClick()
         }
 
         val clickCounterView: TextView = findViewById(R.id.view_click_counter)
         val nextLevelTeaserView: TextView = findViewById(R.id.view_next_level_teaser)
-        clickCounter.setClickUpdateListener {
-            clickCounterView.text = clickCounter.clickCount.toString()
-            val level = LevelManager.getLevel(clickCounter.clickCount)
-            val remaining = LevelManager.getRemainingClicksToNextLevel(clickCounter.clickCount)
-            nextLevelTeaserView.text = getString(R.string.next_level_teaser_text, remaining, level + 1)
+
+        clickRegistrator.setClickCountUpdateListener {
+            OnClickCountUpdate(clickCounterView, nextLevelTeaserView)
         }
-        clickCounter.loadClickHistory()
-        clickCounter.restoreState(savedInstanceState)
+
+        OnClickCountUpdate(clickCounterView, nextLevelTeaserView)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        clickCounter.saveState(outState)
+    override fun onPause() {
+        super.onPause()
+        clickViewModel.saveOnDisk()
+    }
+
+    private fun OnClickCountUpdate(clickCounterView: TextView, nextLevelTeaserView: TextView) {
+        clickCounterView.text = clickCounter.clickCount.toString()
+        val level = LevelManager.getLevel(clickCounter.clickCount)
+        val remaining = LevelManager.getRemainingClicksToNextLevel(clickCounter.clickCount)
+        nextLevelTeaserView.text = getString(R.string.next_level_teaser_text, remaining, level + 1)
     }
 }

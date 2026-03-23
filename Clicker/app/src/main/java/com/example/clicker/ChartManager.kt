@@ -135,7 +135,7 @@ class ChartManager(
                 }
             }
             ChartMode.LAST_MINUTE -> {
-                entries = clickCounter.getLastMinuteClicksByInterval().mapIndexed { index, clickCount ->
+                entries = clickCounter.getLastMinuteClickCountByInterval().mapIndexed { index, clickCount ->
                     Entry((index * 15).toFloat(), clickCount.toFloat())
                 }
             }

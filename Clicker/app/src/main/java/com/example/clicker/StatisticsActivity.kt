@@ -1,6 +1,7 @@
 package com.example.clicker
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -9,6 +10,7 @@ import androidx.core.view.ViewCompat
 import com.github.mikephil.charting.charts.LineChart
 
 class StatisticsActivity : AppCompatActivity() {
+    private val clickViewModel: ClickHistoryViewModel by viewModels()
     private lateinit var clickCounter: ClickCounter
     private lateinit var clicksChart: LineChart
     private lateinit var chartManager: ChartManager
@@ -23,7 +25,7 @@ class StatisticsActivity : AppCompatActivity() {
             insets
         }
 
-        clickCounter = ClickCounter.create(this)
+        clickCounter = ClickCounter(clickViewModel.clickHistory)
 
         configureBackButton()
         configureChart()
@@ -34,7 +36,7 @@ class StatisticsActivity : AppCompatActivity() {
     private fun configureBackButton() {
         val backButton: android.widget.ImageButton = findViewById(R.id.button_back)
         backButton.setOnClickListener {
-            startActivity(android.content.Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 
