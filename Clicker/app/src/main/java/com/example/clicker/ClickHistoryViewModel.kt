@@ -17,10 +17,20 @@ class ClickHistoryViewModel(
 
     var clickHistory: MutableList<Long>
         get() {
-            return savedStateHandle[KEY_BUNDLE_CLICK_HISTORY] ?: run {
-                loadFromDisk()
-                savedStateHandle[KEY_BUNDLE_CLICK_HISTORY] ?: mutableListOf()
+            val bundleHistory: MutableList<Long>? = savedStateHandle[KEY_BUNDLE_CLICK_HISTORY]
+            if (bundleHistory != null) {
+                return bundleHistory
             }
+
+            loadFromDisk()
+            val diskHistory: MutableList<Long>? = savedStateHandle[KEY_BUNDLE_CLICK_HISTORY]
+            if (diskHistory != null) {
+                return diskHistory
+            }
+
+            val emptyHistory = mutableListOf<Long>()
+            savedStateHandle[KEY_BUNDLE_CLICK_HISTORY] = emptyHistory
+            return emptyHistory
         }
         set(value) {
             savedStateHandle[KEY_BUNDLE_CLICK_HISTORY] = value
