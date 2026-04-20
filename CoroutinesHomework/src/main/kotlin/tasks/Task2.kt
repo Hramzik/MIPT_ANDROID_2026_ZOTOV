@@ -1,6 +1,10 @@
 package tasks
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.awaitAll
 
 /**
  * Задание 2: Параллельная загрузка с переключением потоков
@@ -38,6 +42,18 @@ class DataRepositoryImpl : DataRepository {
         fetch: suspend (Int) -> String,
         parse: suspend (String) -> String,
     ): List<String> {
-        TODO("Not yet implemented")
+        return coroutineScope {
+            val jobs = ids.map { id ->
+                async {
+                    val raw = withContext(ioDispatcher) {
+                        fetch(id)
+                    }
+                    withContext(cpuDispatcher) {
+                        parse(raw)
+                    }
+                }
+            }
+            jobs.awaitAll()
+        }
     }
 }
