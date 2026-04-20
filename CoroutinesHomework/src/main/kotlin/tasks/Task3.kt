@@ -46,15 +46,36 @@ class SearchViewModelImpl : SearchViewModel {
     override val state: MutableStateFlow<SearchState> = MutableStateFlow(SearchState())
     override val events: MutableSharedFlow<SearchEvent> = MutableSharedFlow(replay = 10)
 
+    private var lastNotBlankQuery: String? = null
+
     override suspend fun onQueryChanged(query: String, search: suspend (String) -> List<String>) {
-        TODO("Not yet implemented")
+        if (query.isBlank()) {
+            state.value = SearchState()
+            return
+        }
+
+        lastNotBlankQuery = query
+        performSearch(query, search)
     }
 
     override suspend fun onRetry(search: suspend (String) -> List<String>) {
-        TODO("Not yet implemented")
+        lastNotBlankQuery?.let { performSearch(it, search) }
+    }
+
+    private suspend fun performSearch(query: String, search: suspend (String) -> List<String>) {
+        state.value = state.value.copy(query = query, isLoading = true, error = null)
+        try {
+            val results = search(query)
+            state.value = SearchState(query = query, isLoading = false, results = results, error = null)
+        }
+        catch (e: Throwable) {
+            state.value = SearchState(query = query, isLoading = false, results = emptyList(), error = e.message)
+            events.emit(SearchEvent.ShowError(e.message ?: "Unknown error"))
+        }
     }
 
     override suspend fun onClearClicked() {
-        TODO("Not yet implemented")
+        state.value = SearchState()
+        events.emit(SearchEvent.ClearQuery)
     }
 }
