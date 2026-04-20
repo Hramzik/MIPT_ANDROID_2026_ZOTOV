@@ -1,5 +1,7 @@
 package tasks
 
+import kotlinx.coroutines.delay
+
 /**
  * Задание 1: Exponential Backoff
  *
@@ -20,5 +22,19 @@ suspend fun <T> retryWithBackoff(
     baseDelayMs: Long,
     block: suspend (attempt: Int) -> T,
 ): T {
-    TODO("Not yet implemented")
+    var lastTryException: Throwable? = null
+
+    for (attemptIndex in 0 until maxAttempts) {
+        try {
+            return block(attemptIndex)
+        }
+        catch (e: Throwable) {
+            lastTryException = e
+            if (attemptIndex == maxAttempts - 1) break
+            val delayMs = baseDelayMs * (1L shl attemptIndex)
+            delay(delayMs)
+        }
+    }
+
+    throw lastTryException ?: IllegalStateException("No attempts were made")
 }
