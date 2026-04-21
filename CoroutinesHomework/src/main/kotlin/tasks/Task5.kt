@@ -1,6 +1,11 @@
 package tasks
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 
 /**
  * Задание 5: Реактивный поисковый пайплайн
@@ -44,6 +49,21 @@ class SearchPipelineImpl : SearchPipeline {
         debounceMs: Long,
         search: suspend (String) -> List<String>,
     ): Flow<SearchResult> {
-        TODO("Not yet implemented")
+        return queries
+            .filter { it.length >= minLength }
+            .debounce(debounceMs)
+            .distinctUntilChanged()
+            .flatMapLatest { query ->
+                flow {
+                    emit(SearchResult.Loading)
+                    try {
+                        val searchResults = search(query)
+                        emit(SearchResult.Success(searchResults))
+                    }
+                    catch (e: Throwable) {
+                        emit(SearchResult.Error(e.message ?: "Unknown error"))
+                    }
+                }
+            }
     }
 }
