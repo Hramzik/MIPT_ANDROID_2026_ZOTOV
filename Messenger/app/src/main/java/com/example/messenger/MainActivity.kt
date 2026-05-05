@@ -1,10 +1,14 @@
 package com.example.messenger
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import com.example.messenger.network.RetrofitClient
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,5 +20,23 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        lifecycleScope.launch {
+            try {
+                val resp = RetrofitClient.apiService.getChat(1)
+                if (resp.isSuccessful) {
+                    val body = resp.body()
+                    Log.d("NetworkTest", "getChat(1) success: messagesCount=${body?.messages?.size}")
+                } else {
+                    Log.d("NetworkTest", "getChat(1) failed: code=${resp.code()} message=${resp.message()}")
+                }
+            } catch (e: Exception) {
+                Log.e("NetworkTest", "exception while fetching chat", e)
+            }
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, com.example.messenger.messages.MessagesFragment())
+            .commit()
     }
 }
