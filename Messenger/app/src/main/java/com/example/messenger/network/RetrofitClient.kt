@@ -19,11 +19,9 @@ object RetrofitClient {
         chain.proceed(newReq)
     }
 
-    private val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
 
     private val okHttp: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(oauthInterceptor)
-        .addInterceptor(logging)
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .build()

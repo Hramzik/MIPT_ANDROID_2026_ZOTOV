@@ -21,20 +21,6 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        lifecycleScope.launch {
-            try {
-                val resp = RetrofitClient.apiService.getChat(1)
-                if (resp.isSuccessful) {
-                    val body = resp.body()
-                    Log.d("NetworkTest", "getChat(1) success: messagesCount=${body?.messages?.size}")
-                } else {
-                    Log.d("NetworkTest", "getChat(1) failed: code=${resp.code()} message=${resp.message()}")
-                }
-            } catch (e: Exception) {
-                Log.e("NetworkTest", "exception while fetching chat", e)
-            }
-        }
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, com.example.messenger.messages.MessagesFragment())
             .commit()
