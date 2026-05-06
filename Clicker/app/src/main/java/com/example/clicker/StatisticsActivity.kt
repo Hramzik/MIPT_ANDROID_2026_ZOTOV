@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.ViewCompat
-import com.github.mikephil.charting.charts.LineChart
+import com.example.clicker.ui.SimpleLineChart
 
 class StatisticsActivity : AppCompatActivity() {
     private val clickViewModel: ClickHistoryViewModel by viewModels()
@@ -39,18 +39,9 @@ class StatisticsActivity : AppCompatActivity() {
     }
 
     private fun setupChart() {
-        val clicksChart: LineChart = findViewById(R.id.view_click_chart)
+        val clicksChart: SimpleLineChart = findViewById(R.id.view_click_chart)
         chartManager = ChartManager(clicksChart, clickCounter, this)
         chartManager.updateChart()
-
-        setupToggleScaleButton()
-    }
-
-    private fun setupToggleScaleButton() {
-        val toggleScaleButton: android.widget.Button = findViewById(R.id.button_toggle_scale)
-        toggleScaleButton.setOnClickListener {
-            chartManager.switchChartMode()
-        }
     }
 
     private fun setupTable() {

@@ -1,171 +1,42 @@
 package com.example.clicker
 
 import android.content.Context
-import android.content.SharedPreferences
-import com.example.clicker.utils.colorFromAttr
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
+import com.example.clicker.ui.SimpleLineChart
 
 class ChartManager(
-    private val clicksChart: LineChart,
+    private val clicksChart: SimpleLineChart,
     private val clickCounter: ClickCounter,
     private val context: Context,
-    ) {
-    enum class ChartMode {
-        LAST_MONTH, LAST_MINUTE
+) {
+    private companion object {
+        private const val DEFAULT_LABEL_COUNT = 4
     }
-
-    companion object {
-        private const val PREFS_NAME = "chart_prefs"
-        private const val KEY_CHART_MODE = "chart_mode"
-    }
-
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    private var chartMode: ChartMode = ChartMode.LAST_MONTH
     private var lastMonthDateLabels: List<String> = emptyList()
     private val dateManager: DateManager = DateManager()
 
-    private inner class SecondsAgoFormatter : ValueFormatter() {
-        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            val secondsAgo = 45 - value.toInt()
-            if (secondsAgo == 0) {
-                return context.getString(R.string.click_chart_just_now)
-            }
-            val suffix = context.getString(R.string.click_chart_seconds_ago_suffix)
-            return "$secondsAgo$suffix"
-        }
-    }
-
-    private inner class ClicksFormatter : ValueFormatter() {
-        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return if (value == 0f) "" else value.toInt().toString()
-        }
-    }
-
-    private inner class DateFormatter : ValueFormatter() {
-        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            val index = value.toInt()
-            return if (index >= 0 && index < lastMonthDateLabels.size) {
-                lastMonthDateLabels[index]
-            } else {
-                ""
-            }
-        }
-    }
-
     init {
-        loadSettings()
-        configureChart()
-    }
-
-    private fun configureChart() {
-        val axisTextColor = context.colorFromAttr(com.google.android.material.R.attr.colorOnSurface)
-
-        clicksChart.apply {
-            description.isEnabled = false
-            legend.isEnabled = false
-            setExtraLeftOffset(10f) // Bruh, this library is total shit, why do I have to do this myself
-            setExtraRightOffset(30f)
-            setTouchEnabled(false)
-            setDragEnabled(false)
-            setScaleEnabled(false)
-            setPinchZoom(false)
-
-            axisRight.isEnabled = false
-            axisLeft.apply {
-                setDrawGridLines(false)
-                axisMinimum = 0f
-                granularity = 1f
-                valueFormatter = ClicksFormatter()
-            }
-            xAxis.apply {
-                position = XAxis.XAxisPosition.BOTTOM
-                setDrawGridLines(false)
-                setLabelCount(4, true)
-            }
-            axisTextColor?.let {
-                axisLeft.textColor = it
-                xAxis.textColor = it
-            }
-        }
+        updateChart()
     }
 
     fun updateChart() {
-        val dataSet = collectDataSet()
+        val (values, labels, highlighted) = collectMonthData()
+        clicksChart.setData(values, labels, highlighted)
+    }
 
-        configureDataSet(dataSet)
-
-        when (chartMode) {
-            ChartMode.LAST_MINUTE -> {
-                clicksChart.xAxis.valueFormatter = SecondsAgoFormatter()
-            }
-            ChartMode.LAST_MONTH -> {
-                clicksChart.xAxis.valueFormatter = DateFormatter()
-            }
+    private fun collectMonthData(): Triple<List<Float>, List<String>, Set<Int>> {
+        val rawLabels = dateManager.getLastNDayLabels(30)
+        val todayLabel = context.getString(R.string.click_chart_today)
+        lastMonthDateLabels = rawLabels.mapIndexed { index, label ->
+            if (index == rawLabels.lastIndex) todayLabel else label
         }
 
-        showDataSet(dataSet)
+        val values = clickCounter.getLastNDaylyClicks(30).map { it.toFloat() }
+        val highlighted = calculateMonthHighlightIndices(values.size)
+
+        return Triple(values, lastMonthDateLabels, highlighted)
     }
 
-    private fun showDataSet(dataSet: LineDataSet) {
-        val data = LineData(dataSet)
-        clicksChart.data = data
-        clicksChart.invalidate()
-    }
-
-    private fun collectDataSet(): LineDataSet {
-        val entries: List<Entry>
-
-        when (chartMode) {
-            ChartMode.LAST_MONTH -> {
-                val rawLabels = dateManager.getLastNDayLabels(30)
-                val todayLabel = context.getString(R.string.click_chart_today)
-                lastMonthDateLabels = rawLabels.mapIndexed { index, label ->
-                    if (index == rawLabels.lastIndex) todayLabel else label
-                }
-
-                entries = clickCounter.getLastNDaylyClicks(30).mapIndexed { index, clickCount ->
-                    Entry(index.toFloat(), clickCount.toFloat())
-                }
-            }
-            ChartMode.LAST_MINUTE -> {
-                entries = clickCounter.getLastMinuteClickCountByInterval().mapIndexed { index, clickCount ->
-                    Entry((index * 15).toFloat(), clickCount.toFloat())
-                }
-            }
-        }
-
-        return LineDataSet(entries, "")
-    }
-
-    private fun configureDataSet(dataSet: LineDataSet) {
-        val baseColor = ColorTemplate.COLORFUL_COLORS[0]
-        val highlightedPointColor = ColorTemplate.COLORFUL_COLORS[3]
-
-        dataSet.color = baseColor
-        dataSet.lineWidth = 2f
-        dataSet.circleRadius = 5f
-        dataSet.setCircleColor(baseColor)
-        dataSet.mode = LineDataSet.Mode.LINEAR
-        dataSet.setDrawValues(false)
-        dataSet.valueTextSize = 12f
-        dataSet.valueTextColor = baseColor
-
-        if (chartMode == ChartMode.LAST_MONTH) {
-            val highlightedIndices = calculateMonthHighlightIndices(dataSet.entryCount)
-            dataSet.circleColors = MutableList(dataSet.entryCount) { index ->
-                if (index in highlightedIndices) highlightedPointColor else baseColor
-            }
-        }
-    }
-
-    private fun calculateMonthHighlightIndices(pointCount: Int, labelCount: Int = 4): Set<Int> {
+    private fun calculateMonthHighlightIndices(pointCount: Int, labelCount: Int = DEFAULT_LABEL_COUNT): Set<Int> {
         val minX = 0f
         val maxX = (pointCount - 1).toFloat()
         val interval = (maxX - minX) / (labelCount - 1)
@@ -173,27 +44,5 @@ class ChartManager(
         return (0 until labelCount).mapTo(mutableSetOf()) { index ->
             (minX + index * interval).toInt()
         }
-    }
-
-    private fun loadSettings() {
-        val storedModeName = sharedPreferences.getString(KEY_CHART_MODE, ChartMode.LAST_MONTH.name)
-        ChartMode.entries.firstOrNull { it.name == storedModeName }?.let {
-            chartMode = it
-        }
-    }
-
-    private fun saveSettings() {
-        sharedPreferences.edit().putString(KEY_CHART_MODE, chartMode.name).apply()
-    }
-
-    fun switchChartMode() {
-        chartMode = if (chartMode == ChartMode.LAST_MINUTE) {
-            ChartMode.LAST_MONTH
-        } else {
-            ChartMode.LAST_MINUTE
-        }
-
-        saveSettings()
-        updateChart()
     }
 }

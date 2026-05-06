@@ -17,5 +17,4 @@
     <string name="click_chart_seconds_ago_suffix">s ago</string>
     <string name="click_chart_just_now">Just now</string>
     <string name="click_chart_today">Today</string>
-    <string name="button_toggle_scale_text">Toggle scale</string>
 </resources>
