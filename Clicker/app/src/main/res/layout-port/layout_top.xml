@@ -7,13 +7,20 @@
     android:paddingEnd="10dp"
     android:paddingTop="21dp">
 
-    <include
-        layout="@layout/layout_top_left_icon_button_container"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="@drawable/divider_main_activity_icon_buttons_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include layout="@layout/button_author_telegram" />
+        <include layout="@layout/button_exit" />
+
+    </LinearLayout>
 
     <include
         layout="@layout/view_app_name"

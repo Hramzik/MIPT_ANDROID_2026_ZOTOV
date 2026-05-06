@@ -10,26 +10,48 @@
     android:layout_marginTop="33dp"
     android:layout_marginBottom="25dp">
 
-    <include
-        layout="@layout/layout_top_left_vertical_container"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="@drawable/divider_main_activity_icon_buttons"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <include
-        layout="@layout/layout_bottom_left_horizontal_container"
+        <include layout="@layout/view_app_name" />
+        <include layout="@layout/button_author_telegram" />
+        <include layout="@layout/button_mute" />
+        <include layout="@layout/button_exit" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:showDividers="middle"
+        android:divider="@drawable/divider_main_activity_text_buttons"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <include
-        layout="@layout/layout_main_content"
+        <include layout="@layout/button_statistics" />
+        <include layout="@layout/button_authors" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include layout="@layout/button_main_clicker" />
+        <include layout="@layout/layout_progress_description" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
