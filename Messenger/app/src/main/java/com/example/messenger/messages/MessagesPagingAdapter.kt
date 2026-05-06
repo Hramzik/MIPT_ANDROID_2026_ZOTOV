@@ -12,6 +12,10 @@ import com.example.messenger.network.Message
 
 class MessagesPagingAdapter : PagingDataAdapter<Message, MessagesPagingAdapter.VH>(DiffCallback()) {
 
+    companion object {
+        const val SHOW_MESSAGE_ID = true
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
         return VH(v)
@@ -25,7 +29,7 @@ class MessagesPagingAdapter : PagingDataAdapter<Message, MessagesPagingAdapter.V
     class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessage: TextView = itemView.findViewById(R.id.textMessage)
         fun bind(m: Message) {
-            textMessage.text = m.text
+            textMessage.text = if (SHOW_MESSAGE_ID) "${m.text} (id: ${m.id})" else m.text
         }
         fun clear() {
             textMessage.text = ""
