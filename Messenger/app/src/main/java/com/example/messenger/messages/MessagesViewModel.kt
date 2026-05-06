@@ -33,7 +33,9 @@ class MessagesViewModel(
     init {
         viewModelScope.launch {
             try {
-                val resp = api.getChat(chatId, limit = 1, offset = 0)
+                val resp = com.example.messenger.network.RetryExecutor.executeWithRetry {
+                    api.getChat(chatId, limit = 1, offset = 0)
+                }
                 val total = resp.body()?.total ?: 0
                 android.util.Log.d("Messenger", "Chat $chatId has $total messages")
                 val initial = if (total <= 0) 0 else kotlin.math.max(0, total - pageSize)
