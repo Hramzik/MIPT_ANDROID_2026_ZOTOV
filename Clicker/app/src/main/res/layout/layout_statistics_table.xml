@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/StatisticsTable.LayoutWidth"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="?attr/colorPrimary">
+
+    <TableRow>
+        <TextView
+            style="@style/StatisticsTable.TextView.Label"
+            android:text="@string/month_statistics_label" />
+        <TextView
+            android:id="@+id/statistics_table_month_click_count"
+            style="@style/StatisticsTable.TextView.Value" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/StatisticsTable.TextView.Label"
+            android:text="@string/week_statistics_label" />
+        <TextView
+            android:id="@+id/statistics_table_week_click_count"
+            style="@style/StatisticsTable.TextView.Value" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/StatisticsTable.TextView.Label"
+            android:text="@string/day_statistics_label" />
+        <TextView
+            android:id="@+id/statistics_table_day_click_count"
+            style="@style/StatisticsTable.TextView.Value" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/StatisticsTable.TextView.Label"
+            android:text="@string/minute_statistics_label" />
+        <TextView
+            android:id="@+id/statistics_table_minute_click_count"
+            style="@style/StatisticsTable.TextView.Value" />
+    </TableRow>
+
+</TableLayout>
