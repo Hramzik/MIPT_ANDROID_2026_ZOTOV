@@ -8,6 +8,10 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.widget.SearchView
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.paging.LoadState
@@ -32,6 +36,14 @@ class ChatsFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+    private val filterAdapter = ChatsFilterAdapter { chat ->
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, com.example.messenger.messages.MessagesFragment.newInstance(chat.id))
+            .addToBackStack(null)
+            .commit()
+    }
+    private var searchJob: Job? = null
 
     private val viewModel: ChatsViewModel by viewModels {
         object : androidx.lifecycle.ViewModelProvider.Factory {
@@ -75,6 +87,21 @@ class ChatsFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: android.view.Menu, inflater: android.view.MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
+        val item = menu.findItem(R.id.action_search)
+        val sv = item?.actionView as? SearchView
+        sv?.queryHint = "Поиск чатов"
+        sv?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = true
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchJob?.cancel()
+                val q = newText.orEmpty()
+                searchJob = lifecycleScope.launch {
+                    delay(250)
+                    handleQuery(q)
+                }
+                return true
+            }
+        })
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -86,5 +113,21 @@ class ChatsFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun handleQuery(q: String) {
+        if (q.isBlank()) {
+            recycler.adapter = adapter
+            return
+        }
+
+        val list = mutableListOf<com.example.messenger.network.Chat>()
+        for (i in 0 until adapter.itemCount) {
+            val it = adapter.peekItem(i)
+            if (it != null && it.name?.contains(q, ignoreCase = true) == true) list.add(it)
+        }
+
+        filterAdapter.submitList(list)
+        recycler.adapter = filterAdapter
     }
 }

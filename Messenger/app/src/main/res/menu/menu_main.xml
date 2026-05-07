@@ -8,4 +8,11 @@
         android:icon="@android:drawable/ic_input_add"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_search"
+        android:title="Поиск"
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+
 </menu>
