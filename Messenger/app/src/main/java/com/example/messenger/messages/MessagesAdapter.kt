@@ -10,7 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.messenger.R
 import com.example.messenger.network.Message
 
-class MessagesAdapter : ListAdapter<Message, MessagesAdapter.VH>(DiffCallback()) {
+class MessagesAdapter : ListAdapter<Message, MessagesAdapter.VH>(DIFF) {
+
+    companion object {
+        private val DIFF = object : DiffUtil.ItemCallback<Message>() {
+            override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean = oldItem.id == newItem.id
+            override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean = oldItem == newItem
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
@@ -27,10 +34,5 @@ class MessagesAdapter : ListAdapter<Message, MessagesAdapter.VH>(DiffCallback())
         fun bind(m: Message) {
             textMessage.text = m.text
         }
-    }
-
-    class DiffCallback : DiffUtil.ItemCallback<Message>() {
-        override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean = oldItem == newItem
     }
 }

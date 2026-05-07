@@ -10,10 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.messenger.R
 import com.example.messenger.network.Message
 
-class MessagesPagingAdapter : PagingDataAdapter<Message, MessagesPagingAdapter.VH>(DiffCallback()) {
+class MessagesPagingAdapter : PagingDataAdapter<Message, MessagesPagingAdapter.VH>(DIFF) {
 
     companion object {
         const val SHOW_MESSAGE_ID = true
+
+        private val DIFF = object : DiffUtil.ItemCallback<Message>() {
+            override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean = oldItem.id == newItem.id
+            override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean = oldItem == newItem
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -34,10 +39,5 @@ class MessagesPagingAdapter : PagingDataAdapter<Message, MessagesPagingAdapter.V
         fun clear() {
             textMessage.text = ""
         }
-    }
-
-    class DiffCallback : DiffUtil.ItemCallback<Message>() {
-        override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean = oldItem == newItem
     }
 }

@@ -10,7 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.messenger.R
 import com.example.messenger.network.Chat
 
-class ChatsPagingAdapter(private val onClick: (Chat) -> Unit) : PagingDataAdapter<Chat, ChatsPagingAdapter.VH>(DiffCallback()) {
+class ChatsPagingAdapter(private val onClick: (Chat) -> Unit) : PagingDataAdapter<Chat, ChatsPagingAdapter.VH>(DIFF) {
+
+    companion object {
+        private val DIFF = object : DiffUtil.ItemCallback<Chat>() {
+            override fun areItemsTheSame(oldItem: Chat, newItem: Chat) = oldItem.id == newItem.id
+            override fun areContentsTheSame(oldItem: Chat, newItem: Chat) = oldItem == newItem
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_chat, parent, false)
@@ -32,11 +39,6 @@ class ChatsPagingAdapter(private val onClick: (Chat) -> Unit) : PagingDataAdapte
             title.text = ""
             itemView.setOnClickListener(null)
         }
-    }
-
-    class DiffCallback : DiffUtil.ItemCallback<Chat>() {
-        override fun areItemsTheSame(oldItem: Chat, newItem: Chat) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Chat, newItem: Chat) = oldItem == newItem
     }
 
     fun peekItem(position: Int): Chat? = getItem(position)
