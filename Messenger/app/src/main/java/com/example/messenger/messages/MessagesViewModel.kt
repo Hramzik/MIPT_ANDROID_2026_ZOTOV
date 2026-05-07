@@ -12,48 +12,61 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
 
 class MessagesViewModel(
     private val api: ApiService,
-    private val chatId: Int = 1,
     private val pageSize: Int = 20
 ) : ViewModel() {
 
-    private val initialKey = MutableStateFlow<Int?>(null)
+    private val selectedChatId = MutableStateFlow<Int?>(null)
 
-    val messagesFlow: Flow<PagingData<Message>> = initialKey
+    val messagesFlow: Flow<PagingData<Message>> = selectedChatId
         .filterNotNull()
-        .flatMapLatest { offset ->
-            Pager(PagingConfig(pageSize = pageSize, enablePlaceholders = false), initialKey = offset) {
-                MessagesPagingSource(api, chatId, pageSize)
-            }.flow.cachedIn(viewModelScope)
-        }
-
-    init {
-        viewModelScope.launch {
-            try {
-                val resp = com.example.messenger.network.RetryExecutor.executeWithRetry {
-                    api.getChat(chatId, limit = 1, offset = 0)
-                }
-                val total = resp.body()?.total ?: 0
-                android.util.Log.d("Messenger", "Chat $chatId has $total messages")
-                val initial = if (total <= 0) 0 else kotlin.math.max(0, total - pageSize)
-                initialKey.value = initial
-            } catch (e: Exception) {
-                android.util.Log.e("Messenger", "Chat $chatId messages count fetch failed", e)
-                initialKey.value = 0
+        .flatMapLatest { chatId ->
+            flow {
+                val initial = fetchInitialKey(chatId)
+                emitAll(
+                    Pager(PagingConfig(pageSize = pageSize, enablePlaceholders = false), initialKey = initial) {
+                        MessagesPagingSource(api, chatId, pageSize)
+                    }.flow
+                )
             }
+        }
+        .cachedIn(viewModelScope)
+
+    fun setChatId(chatId: Int?) {
+        if (selectedChatId.value == chatId) return
+        selectedChatId.value = chatId
+    }
+
+    private suspend fun fetchInitialKey(chatId: Int): Int {
+        return try {
+            val resp = com.example.messenger.network.RetryExecutor.executeWithRetry {
+                api.getChat(chatId, limit = 1, offset = 0)
+            }
+            val total = resp.body()?.total ?: 0
+            android.util.Log.d("Messenger", "Chat $chatId has $total messages")
+            kotlin.math.max(0, total - pageSize)
+        } catch (e: Exception) {
+            android.util.Log.e("Messenger", "Chat $chatId messages count fetch failed", e)
+            0
         }
     }
 
     fun sendMessage(text: String, onResult: (Boolean) -> Unit = {}) {
         viewModelScope.launch {
             try {
-                val resp = com.example.messenger.network.RetryExecutor.executeWithRetry {
+                val chatId = selectedChatId.value
+                if (chatId == null) {
+                    onResult(false)
+                    return@launch
+                }
+                com.example.messenger.network.RetryExecutor.executeWithRetry {
                     api.postMessage(chatId, text)
                 }
-                initialKey.value = (resp.body()!!.messages.size - pageSize).coerceAtLeast(0)
                 onResult(true)
             } catch (e: Exception) {
                 android.util.Log.e("Messenger", "sendMessage failed", e)

@@ -8,7 +8,9 @@ import android.widget.ProgressBar
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import android.os.Parcelable
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +24,8 @@ import android.util.Log
 
 class MessagesFragment : Fragment() {
 
+    private val mainVm: com.example.messenger.MainViewModel by activityViewModels()
+
     private lateinit var recycler: RecyclerView
     private lateinit var progressRefresh: ProgressBar
     private lateinit var progressPrepend: ProgressBar
@@ -29,9 +33,8 @@ class MessagesFragment : Fragment() {
     private val viewModel: MessagesViewModel by viewModels {
         object : androidx.lifecycle.ViewModelProvider.Factory {
             override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                val chatId = arguments?.getInt(ARG_CHAT_ID) ?: 1
                 @Suppress("UNCHECKED_CAST")
-                return MessagesViewModel(RetrofitClient.apiService, chatId) as T
+                return MessagesViewModel(RetrofitClient.apiService) as T
             }
         }
     }
@@ -53,7 +56,20 @@ class MessagesFragment : Fragment() {
         }
         recycler.adapter = adapter
 
-        lifecycleScope.launch {
+        val saved = mainVm.getMessagesRvState() as? Parcelable
+        saved?.let { recycler.layoutManager?.onRestoreInstanceState(it) }
+
+        lifecycleScope.launchWhenStarted {
+            mainVm.selected.collect { id ->
+                viewModel.setChatId(id)
+                if (id == null) {
+                    adapter.submitData(lifecycle, androidx.paging.PagingData.empty())
+                }
+                adapter.refresh()
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
             viewModel.messagesFlow.collectLatest { pagingData ->
                 adapter.submitData(pagingData)
             }
@@ -92,15 +108,10 @@ class MessagesFragment : Fragment() {
         }
     }
 
-    companion object {
-        private const val ARG_CHAT_ID = "chat_id"
+    override fun onDestroyView() {
+        super.onDestroyView()
 
-        fun newInstance(chatId: Int): MessagesFragment {
-            val f = MessagesFragment()
-            val args = android.os.Bundle()
-            args.putInt(ARG_CHAT_ID, chatId)
-            f.arguments = args
-            return f
-        }
+        val s = recycler.layoutManager?.onSaveInstanceState()
+        mainVm.saveMessagesRvState(s)
     }
 }

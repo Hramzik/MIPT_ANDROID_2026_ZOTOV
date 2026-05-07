@@ -1,17 +1,17 @@
 package com.example.messenger
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import com.example.messenger.network.RetrofitClient
+import androidx.core.view.WindowInsetsCompat
 import androidx.appcompat.widget.Toolbar
 
 class MainActivity : AppCompatActivity() {
+    private val mainVm: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,8 +24,32 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, com.example.messenger.chats.ChatsFragment())
-            .commit()
+        val isLandscape = findViewById<android.view.View?>(R.id.messages_container) != null
+
+        if (isLandscape) {
+            if (supportFragmentManager.findFragmentByTag("CHATS") == null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.chats_container, com.example.messenger.chats.ChatsFragment(), "CHATS")
+                    .replace(R.id.messages_container, com.example.messenger.messages.MessagesFragment(), "MESSAGES")
+                    .commit()
+                
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.messages_container, com.example.messenger.messages.MessagesFragment(), "MESSAGES")
+                        .commit()
+            }
+        } else {
+            lifecycleScope.launchWhenStarted {
+                mainVm.selected.collect { id ->
+                    val frag = if (id != null) {
+                        com.example.messenger.messages.MessagesFragment()
+                    } else {
+                        com.example.messenger.chats.ChatsFragment()
+                    }
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, frag)
+                        .commit()
+                }
+            }
+        }
     }
 }

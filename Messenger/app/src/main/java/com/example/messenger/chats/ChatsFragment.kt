@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import android.os.Parcelable
 import androidx.lifecycle.lifecycleScope
 import androidx.appcompat.widget.SearchView
 import kotlinx.coroutines.Job
@@ -22,6 +24,8 @@ import kotlinx.coroutines.launch
 
 class ChatsFragment : Fragment() {
 
+    private val mainVm: com.example.messenger.MainViewModel by activityViewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -31,17 +35,11 @@ class ChatsFragment : Fragment() {
     private lateinit var progressAppend: ProgressBar
     private lateinit var progressRefresh: ProgressBar
     private val adapter = ChatsPagingAdapter { chat ->
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, com.example.messenger.messages.MessagesFragment.newInstance(chat.id))
-            .addToBackStack(null)
-            .commit()
+        mainVm.select(chat.id)
     }
 
     private val filterAdapter = ChatsFilterAdapter { chat ->
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, com.example.messenger.messages.MessagesFragment.newInstance(chat.id))
-            .addToBackStack(null)
-            .commit()
+        mainVm.select(chat.id)
     }
     private var searchJob: Job? = null
 
@@ -67,6 +65,9 @@ class ChatsFragment : Fragment() {
         recycler.layoutManager = LinearLayoutManager(requireContext())
         recycler.adapter = adapter
 
+        val saved = mainVm.getChatsRvState() as? Parcelable
+        saved?.let { recycler.layoutManager?.onRestoreInstanceState(it) }
+
         lifecycleScope.launch {
             viewModel.chatsFlow.collectLatest { pagingData ->
                 adapter.submitData(pagingData)
@@ -83,6 +84,13 @@ class ChatsFragment : Fragment() {
             val refreshState = state.refresh
             progressRefresh.visibility = if (refreshState is LoadState.Loading) View.VISIBLE else View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        val s = recycler.layoutManager?.onSaveInstanceState()
+        mainVm.saveChatsRvState(s)
     }
 
     override fun onCreateOptionsMenu(menu: android.view.Menu, inflater: android.view.MenuInflater) {
