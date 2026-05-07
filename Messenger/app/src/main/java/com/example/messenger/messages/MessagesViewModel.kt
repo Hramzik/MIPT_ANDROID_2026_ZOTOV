@@ -46,4 +46,20 @@ class MessagesViewModel(
             }
         }
     }
+
+    fun sendMessage(text: String, onResult: (Boolean) -> Unit = {}) {
+        viewModelScope.launch {
+            try {
+                val resp = com.example.messenger.network.RetryExecutor.executeWithRetry {
+                    api.postMessage(chatId, text)
+                }
+                initialKey.value = resp.body()!!.messages.size - pageSize
+                onResult(true)
+            } catch (e: Exception) {
+                android.util.Log.e("Messenger", "sendMessage failed", e)
+                onResult(false)
+            }
+        }
+    }
+
 }

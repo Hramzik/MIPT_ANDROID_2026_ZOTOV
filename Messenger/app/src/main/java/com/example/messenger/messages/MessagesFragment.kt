@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -42,8 +44,12 @@ class MessagesFragment : Fragment() {
         recycler = view.findViewById(R.id.recyclerMessages)
         progressTop = view.findViewById(R.id.progressTop)
         progress = view.findViewById(R.id.progressLoading)
+        val editMessage: EditText = view.findViewById(R.id.editMessage)
+        val btnSend: Button = view.findViewById(R.id.btnSend)
 
-        recycler.layoutManager = LinearLayoutManager(requireContext())
+        recycler.layoutManager = LinearLayoutManager(requireContext()).apply {
+            stackFromEnd = true
+        }
         recycler.adapter = adapter
 
         lifecycleScope.launch {
@@ -52,18 +58,34 @@ class MessagesFragment : Fragment() {
             }
         }
 
-        var initialScrolledToBottom = false
+        var doNeedToScrollToBottomOnAdapterUpdate = false
         adapter.addLoadStateListener { state ->
             val prependState = state.prepend
             progressTop.visibility = if (prependState is LoadState.Loading) View.VISIBLE else View.GONE
             val refreshState = state.refresh
             progress.visibility = if (refreshState is LoadState.Loading) View.VISIBLE else View.GONE
 
-            if (!initialScrolledToBottom && refreshState is androidx.paging.LoadState.NotLoading) {
+            if (doNeedToScrollToBottomOnAdapterUpdate && refreshState is androidx.paging.LoadState.NotLoading) {
                 val count = adapter.itemCount
-                if (count > 0) {
-                    recycler.scrollToPosition(count - 1)
-                    initialScrolledToBottom = true
+                recycler.scrollToPosition(count - 1)
+                doNeedToScrollToBottomOnAdapterUpdate = false
+            }
+        }
+
+        btnSend.setOnClickListener {
+            val text = editMessage.text.toString().trim()
+            if (text.isEmpty()) return@setOnClickListener
+            btnSend.isEnabled = false
+            viewModel.sendMessage(text) { ok ->
+                lifecycleScope.launch {
+                    btnSend.isEnabled = true
+                    if (ok) {
+                        editMessage.setText("")
+                        doNeedToScrollToBottomOnAdapterUpdate = true
+                        adapter.refresh()
+                    } else {
+                        android.util.Log.w("Messenger", "sendMessage failed")
+                    }
                 }
             }
         }
