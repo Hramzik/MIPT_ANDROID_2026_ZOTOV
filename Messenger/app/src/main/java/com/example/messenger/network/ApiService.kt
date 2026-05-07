@@ -18,4 +18,10 @@ interface ApiService {
         @Query("id") id: Int,
         @Query("text") text: String
     ): Response<ChatResponse>
+
+    @GET("/mipt_network/chats")
+    suspend fun getChats(
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null
+    ): Response<ChatsResponse>
 }

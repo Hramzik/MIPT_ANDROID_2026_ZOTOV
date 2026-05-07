@@ -53,7 +53,7 @@ class MessagesViewModel(
                 val resp = com.example.messenger.network.RetryExecutor.executeWithRetry {
                     api.postMessage(chatId, text)
                 }
-                initialKey.value = resp.body()!!.messages.size - pageSize
+                initialKey.value = (resp.body()!!.messages.size - pageSize).coerceAtLeast(0)
                 onResult(true)
             } catch (e: Exception) {
                 android.util.Log.e("Messenger", "sendMessage failed", e)

@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, com.example.messenger.messages.MessagesFragment())
+            .replace(R.id.fragment_container, com.example.messenger.chats.ChatsFragment())
             .commit()
     }
 }

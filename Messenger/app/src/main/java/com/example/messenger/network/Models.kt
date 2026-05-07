@@ -16,3 +16,22 @@ data class ChatResponse(
     val limit: Int? = null,
     val offset: Int? = null
 )
+
+@JsonClass(generateAdapter = true)
+data class Chat(
+    val id: Int,
+    val name: String
+)
+
+@JsonClass(generateAdapter = true)
+data class ChatsResponse(
+    val chats: List<Chat>? = null,
+    val data: List<Chat>? = null,
+    val total: Int? = null,
+    val limit: Int? = null,
+    val offset: Int? = null
+)
+
+{
+    fun items(): List<Chat> = data ?: chats ?: emptyList()
+}

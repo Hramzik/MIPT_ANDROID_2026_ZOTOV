@@ -23,14 +23,15 @@ import android.util.Log
 class MessagesFragment : Fragment() {
 
     private lateinit var recycler: RecyclerView
-    private lateinit var progress: ProgressBar
-    private lateinit var progressTop: ProgressBar
+    private lateinit var progressRefresh: ProgressBar
+    private lateinit var progressPrepend: ProgressBar
     private val adapter = MessagesPagingAdapter()
     private val viewModel: MessagesViewModel by viewModels {
         object : androidx.lifecycle.ViewModelProvider.Factory {
             override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                val chatId = arguments?.getInt(ARG_CHAT_ID) ?: 1
                 @Suppress("UNCHECKED_CAST")
-                return MessagesViewModel(RetrofitClient.apiService) as T
+                return MessagesViewModel(RetrofitClient.apiService, chatId) as T
             }
         }
     }
@@ -42,8 +43,8 @@ class MessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recycler = view.findViewById(R.id.recyclerMessages)
-        progressTop = view.findViewById(R.id.progressTop)
-        progress = view.findViewById(R.id.progressLoading)
+        progressPrepend = view.findViewById(R.id.progressMessagesPrepend)
+        progressRefresh = view.findViewById(R.id.progressMessagesRefresh)
         val editMessage: EditText = view.findViewById(R.id.editMessage)
         val btnSend: Button = view.findViewById(R.id.btnSend)
 
@@ -61,9 +62,9 @@ class MessagesFragment : Fragment() {
         var doNeedToScrollToBottomOnAdapterUpdate = false
         adapter.addLoadStateListener { state ->
             val prependState = state.prepend
-            progressTop.visibility = if (prependState is LoadState.Loading) View.VISIBLE else View.GONE
+            progressPrepend.visibility = if (prependState is LoadState.Loading) View.VISIBLE else View.GONE
             val refreshState = state.refresh
-            progress.visibility = if (refreshState is LoadState.Loading) View.VISIBLE else View.GONE
+            progressRefresh.visibility = if (refreshState is LoadState.Loading) View.VISIBLE else View.GONE
 
             if (doNeedToScrollToBottomOnAdapterUpdate && refreshState is androidx.paging.LoadState.NotLoading) {
                 val count = adapter.itemCount
@@ -88,6 +89,18 @@ class MessagesFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    companion object {
+        private const val ARG_CHAT_ID = "chat_id"
+
+        fun newInstance(chatId: Int): MessagesFragment {
+            val f = MessagesFragment()
+            val args = android.os.Bundle()
+            args.putInt(ARG_CHAT_ID, chatId)
+            f.arguments = args
+            return f
         }
     }
 }

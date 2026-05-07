@@ -42,7 +42,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/progressTop"
+        android:id="@+id/progressMessagesPrepend"
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -51,7 +51,7 @@
         android:layout_marginTop="8dp" />
 
     <ProgressBar
-        android:id="@+id/progressLoading"
+        android:id="@+id/progressMessagesRefresh"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:visibility="gone"
