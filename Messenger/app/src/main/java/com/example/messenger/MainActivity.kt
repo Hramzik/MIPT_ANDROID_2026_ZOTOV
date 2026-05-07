@@ -6,11 +6,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
+import android.view.Menu
 import androidx.core.view.WindowInsetsCompat
 import androidx.appcompat.widget.Toolbar
 
 class MainActivity : AppCompatActivity() {
     private val mainVm: MainViewModel by viewModels()
+    private var isLandscape: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,18 +26,14 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val isLandscape = findViewById<android.view.View?>(R.id.messages_container) != null
+        isLandscape = findViewById<android.view.View?>(R.id.messages_container) != null
 
         if (isLandscape) {
-            if (supportFragmentManager.findFragmentByTag("CHATS") == null) {
+            if (supportFragmentManager.findFragmentById(R.id.chats_container) == null) {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.chats_container, com.example.messenger.chats.ChatsFragment(), "CHATS")
-                    .replace(R.id.messages_container, com.example.messenger.messages.MessagesFragment(), "MESSAGES")
+                    .replace(R.id.chats_container, com.example.messenger.chats.ChatsFragment())
+                    .replace(R.id.messages_container, com.example.messenger.messages.MessagesFragment())
                     .commit()
-                
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.messages_container, com.example.messenger.messages.MessagesFragment(), "MESSAGES")
-                        .commit()
             }
         } else {
             lifecycleScope.launchWhenStarted {
@@ -51,5 +49,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        // Clear menu when showing messages in port
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment is com.example.messenger.messages.MessagesFragment && !isLandscape) {
+            menu.clear()
+            return true
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 }

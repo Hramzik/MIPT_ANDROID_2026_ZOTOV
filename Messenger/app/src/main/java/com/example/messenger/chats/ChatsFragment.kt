@@ -94,6 +94,7 @@ class ChatsFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: android.view.Menu, inflater: android.view.MenuInflater) {
+        menu.clear()
         inflater.inflate(R.menu.menu_main, menu)
         val item = menu.findItem(R.id.action_search)
         val sv = item?.actionView as? SearchView
