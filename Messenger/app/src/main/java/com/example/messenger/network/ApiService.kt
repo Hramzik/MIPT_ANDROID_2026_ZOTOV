@@ -24,4 +24,9 @@ interface ApiService {
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
     ): Response<ChatsResponse>
+
+    @POST("/mipt_network/create_chat")
+    suspend fun createChat(
+        @Query("name") name: String
+    ): Response<ChatsResponse>
 }

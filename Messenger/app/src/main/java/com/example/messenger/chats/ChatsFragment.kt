@@ -18,6 +18,11 @@ import kotlinx.coroutines.launch
 
 class ChatsFragment : Fragment() {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     private lateinit var recycler: RecyclerView
     private lateinit var progressAppend: ProgressBar
     private lateinit var progressRefresh: ProgressBar
@@ -56,11 +61,30 @@ class ChatsFragment : Fragment() {
             }
         }
 
+        parentFragmentManager.setFragmentResultListener("create_chat_ok", viewLifecycleOwner) { _, _ ->
+            adapter.refresh()
+        }
+
         adapter.addLoadStateListener { state ->
             val appendState = state.append
             progressAppend.visibility = if (appendState is LoadState.Loading) View.VISIBLE else View.GONE
             val refreshState = state.refresh
             progressRefresh.visibility = if (refreshState is LoadState.Loading) View.VISIBLE else View.GONE
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: android.view.Menu, inflater: android.view.MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_create_chat -> {
+                CreateChatDialogFragment().show(parentFragmentManager, "create_chat")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
