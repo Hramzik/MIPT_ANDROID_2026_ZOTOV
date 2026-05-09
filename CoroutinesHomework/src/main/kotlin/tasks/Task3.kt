@@ -51,6 +51,7 @@ class SearchViewModelImpl : SearchViewModel {
     override suspend fun onQueryChanged(query: String, search: suspend (String) -> List<String>) {
         if (query.isBlank()) {
             state.value = SearchState()
+            lastNotBlankQuery = null
             return
         }
 
@@ -76,6 +77,7 @@ class SearchViewModelImpl : SearchViewModel {
 
     override suspend fun onClearClicked() {
         state.value = SearchState()
+        lastNotBlankQuery = null
         events.emit(SearchEvent.ClearQuery)
     }
 }
