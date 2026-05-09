@@ -26,22 +26,32 @@ class ChatsFragment : Fragment() {
 
     private val mainVm: com.example.messenger.MainViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     private lateinit var recycler: RecyclerView
     private lateinit var progressAppend: ProgressBar
     private lateinit var progressRefresh: ProgressBar
-    private val adapter = ChatsPagingAdapter { chat ->
-        mainVm.select(chat.id)
+
+    private lateinit var adapter: ChatsPagingAdapter
+    private lateinit var filterAdapter: ChatsFilterAdapter
+    private var searchJob: Job? = null
+
+    init {
+        initAdapters()
     }
 
-    private val filterAdapter = ChatsFilterAdapter { chat ->
-        mainVm.select(chat.id)
+    private fun initAdapters() {
+        val onChatClick: (com.example.messenger.network.Chat) -> Unit = { chat ->
+            mainVm.select(chat.id)
+            if (resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, com.example.messenger.messages.MessagesFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
+        adapter = ChatsPagingAdapter(onChatClick)
+        filterAdapter = ChatsFilterAdapter(onChatClick)
     }
-    private var searchJob: Job? = null
 
     private val viewModel: ChatsViewModel by viewModels {
         object : androidx.lifecycle.ViewModelProvider.Factory {
@@ -49,6 +59,16 @@ class ChatsFragment : Fragment() {
                 @Suppress("UNCHECKED_CAST")
                 return ChatsViewModel(RetrofitClient.apiService) as T
             }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+
+        val orientation = resources.configuration.orientation
+        if (orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT) {
+            mainVm.select(null)
         }
     }
 

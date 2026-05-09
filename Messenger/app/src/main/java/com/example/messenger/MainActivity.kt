@@ -36,18 +36,12 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
         } else {
-            lifecycleScope.launchWhenStarted {
-                mainVm.selected.collect { id ->
-                    val frag = if (id != null) {
-                        com.example.messenger.messages.MessagesFragment()
-                    } else {
-                        com.example.messenger.chats.ChatsFragment()
-                    }
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, frag)
-                        .commit()
-                }
+            if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, com.example.messenger.chats.ChatsFragment())
+                    .commit()
             }
+            
         }
     }
 
