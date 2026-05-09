@@ -7,9 +7,13 @@ import com.example.messenger.R
 import com.example.messenger.network.Chat
 
 class ChatItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    companion object {
+        const val SHOW_CHAT_ID = true
+    }
+
     private val title: TextView = itemView.findViewById(R.id.textChatTitle)
     fun bind(chat: Chat, onClick: (Chat) -> Unit) {
-        title.text = chat.name
+        title.text = if (SHOW_CHAT_ID) "${chat.name} (id: ${chat.id})" else chat.name
         itemView.setOnClickListener { onClick(chat) }
     }
     fun clear() {
