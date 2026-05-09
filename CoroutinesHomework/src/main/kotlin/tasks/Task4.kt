@@ -29,47 +29,30 @@ interface DeduplicatingLoader<K, V> {
 class DeduplicatingLoaderImpl<K, V> : DeduplicatingLoader<K, V> {
     private val keyToDeferred = mutableMapOf<K, CompletableDeferred<V>>()
     private val keyToDeferredMutex = Mutex()
-
     override suspend fun load(key: K, loader: suspend (K) -> V): V {
-        val hasDeferredAlreadyExisted: Boolean = keyToDeferredMutex.withLock {
-            keyToDeferred.containsKey(key).also {
-                if (!it) {
-                    createDeferred(key)
-                }
+        val (deferred, amITheOwner) = keyToDeferredMutex.withLock {
+            val existingDeffered = keyToDeferred[key]
+            if (existingDeffered != null) {
+                existingDeffered to false
+            } else {
+                val newDeffered = CompletableDeferred<V>()
+                keyToDeferred[key] = newDeffered
+                newDeffered to true
             }
         }
 
-        if (hasDeferredAlreadyExisted) {
-            return waitForExistingDeferred(key)
+        if (!amITheOwner) {
+            return deferred.await()
         }
-        return completeDeferred(key, loader)
-
-    }
-
-    private suspend fun waitForExistingDeferred(key: K): V {
-        val deferred = keyToDeferredMutex.withLock {
-            keyToDeferred[key]!!
-        }
-        return deferred.await()
-    }
-
-    private suspend fun createDeferred(key: K) {
-        keyToDeferred[key] = CompletableDeferred()
-    }
-
-    private suspend fun completeDeferred(key: K, loader: suspend (K) -> V): V {
-        val deferred = keyToDeferred[key]!!
 
         try {
-            val deferredResult = loader(key)
-            deferred.complete(deferredResult)
-            return deferredResult
-        }
-        catch (e: Throwable) {
+            val result = loader(key)
+            deferred.complete(result)
+            return result
+        } catch (e: Throwable) {
             deferred.completeExceptionally(e)
             throw e
-        }
-        finally {
+        } finally {
             keyToDeferredMutex.withLock {
                 keyToDeferred.remove(key)
             }
