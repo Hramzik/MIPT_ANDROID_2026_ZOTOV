@@ -1,25 +1,26 @@
 package com.example.messenger.messages.internal
 
+import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadParams
 import androidx.paging.PagingSource.LoadResult
 import androidx.paging.PagingState
 import android.util.Log
 import com.example.messenger.network.ApiService
 import com.example.messenger.network.Message
-import com.example.messenger.paging.BasePagingSource
+import com.example.messenger.network.RetryExecutor
 
 class MessagesPagingSource(
     private val api: ApiService,
     private val chatId: Int,
     private val pageSize: Int
-) : BasePagingSource<Message>() {
+) : PagingSource<Int, Message>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Message> {
         val offset = params.key ?: 0
         val limit = params.loadSize.coerceAtMost(pageSize)
         android.util.Log.d("Messenger", "Loading: chat = $chatId, offset=$offset, loadSize=${params.loadSize}, limit=$limit")
         return try {
-            val resp = callWithRetry { api.getChat(chatId, limit = limit, offset = offset) }
+            val resp = RetryExecutor.executeWithRetry { api.getChat(chatId, limit = limit, offset = offset) }
             android.util.Log.d("Messenger", "Result for chat = $chatId, offset=$offset limit=$limit -> code=${resp.code()}")
             if (resp.isSuccessful) {
                 val body = resp.body()
