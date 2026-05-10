@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -40,19 +39,11 @@ dependencies {
     implementation libs.androidx.activity
     implementation libs.androidx.constraintlayout
 
-    implementation 'com.google.dagger:dagger:2.48.1'
+    implementation project(':core')
+    implementation project(':feature-chats')
+    implementation project(':feature-messages')
 
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
-    implementation 'com.squareup.moshi:moshi:1.15.0'
-    implementation 'com.squareup.moshi:moshi-kotlin:1.15.0'
-
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
-    implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
-    implementation 'androidx.fragment:fragment-ktx:1.6.1'
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit

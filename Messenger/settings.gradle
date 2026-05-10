@@ -24,3 +24,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Messenger"
 include ':app'
+include ':core'
+include ':feature-chats'
+include ':feature-messages'

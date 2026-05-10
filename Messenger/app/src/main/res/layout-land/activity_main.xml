@@ -25,13 +25,13 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
-            android:id="@+id/chats_container"
+            android:id="@id/chats_container"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent" />
 
         <FrameLayout
-            android:id="@+id/messages_container"
+            android:id="@id/messages_container"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent" />
