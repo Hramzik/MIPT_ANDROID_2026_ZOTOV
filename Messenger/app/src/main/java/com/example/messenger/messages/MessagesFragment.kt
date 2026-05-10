@@ -18,26 +18,18 @@ import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
 import kotlinx.coroutines.flow.collectLatest
 import com.example.messenger.R
-import com.example.messenger.network.RetrofitClient
 import kotlinx.coroutines.launch
 import android.util.Log
 
 class MessagesFragment : Fragment() {
 
     private val mainVm: com.example.messenger.MainViewModel by activityViewModels()
+    private val viewModel: MessagesViewModel by viewModels()
 
     private lateinit var recycler: RecyclerView
     private lateinit var progressRefresh: ProgressBar
     private lateinit var progressPrepend: ProgressBar
     private val adapter = MessagesPagingAdapter()
-    private val viewModel: MessagesViewModel by viewModels {
-        object : androidx.lifecycle.ViewModelProvider.Factory {
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return MessagesViewModel(RetrofitClient.apiService) as T
-            }
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_messages, container, false)

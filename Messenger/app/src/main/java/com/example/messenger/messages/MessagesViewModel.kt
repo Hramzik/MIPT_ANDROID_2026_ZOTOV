@@ -1,11 +1,13 @@
 package com.example.messenger.messages
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.messenger.MyApp
 import com.example.messenger.network.ApiService
 import com.example.messenger.network.Message
 import kotlinx.coroutines.flow.Flow
@@ -15,11 +17,17 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MessagesViewModel(
-    private val api: ApiService,
+class MessagesViewModel(application: Application) : AndroidViewModel(application) {
+
+    @Inject
+    lateinit var api: ApiService
     private val pageSize: Int = 20
-) : ViewModel() {
+
+    init {
+        (application as MyApp).appComponent.inject(this)
+    }
 
     private val selectedChatId = MutableStateFlow<Int?>(null)
 

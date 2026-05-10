@@ -19,12 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.paging.LoadState
 import kotlinx.coroutines.flow.collectLatest
 import com.example.messenger.R
-import com.example.messenger.network.RetrofitClient
-import kotlinx.coroutines.launch
 
 class ChatsFragment : Fragment() {
 
     private val mainVm: com.example.messenger.MainViewModel by activityViewModels()
+    private val viewModel: ChatsViewModel by viewModels()
 
     private lateinit var recycler: RecyclerView
     private lateinit var progressAppend: ProgressBar
@@ -51,15 +50,6 @@ class ChatsFragment : Fragment() {
 
         adapter = ChatsPagingAdapter(onChatClick)
         filterAdapter = ChatsFilterAdapter(onChatClick)
-    }
-
-    private val viewModel: ChatsViewModel by viewModels {
-        object : androidx.lifecycle.ViewModelProvider.Factory {
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return ChatsViewModel(RetrofitClient.apiService) as T
-            }
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
